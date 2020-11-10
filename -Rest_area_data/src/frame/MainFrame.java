@@ -50,7 +50,7 @@ public class MainFrame{
       jmb.add(jm03); //JmenuBar¿¡ Menu Item Ãß°¡
 
       
-      //frame.getContentPane().add(BorderLayout.NORTH, jmb);
+      ///frame.getContentPane().add(BorderLayout.NORTH, jmb);
       frame.setJMenuBar(jmb);
       
       m01_item.addActionListener(new Menu01ActionListener());
