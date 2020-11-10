@@ -13,7 +13,7 @@ public class MainFrame{
    JMenuBar jmb;
    JMenuItem m01_item, m02_item, m03_item;
    
-   
+   /*
    public static void main(String[] args) {   
       //메인 메소드 실행
       MainFrame MF = new MainFrame();
@@ -146,5 +146,5 @@ public class MainFrame{
       }
       
    }
-
+*/
 }
