@@ -4,11 +4,11 @@ import java.sql.DriverManager;
 public class DBConnection 
 {
 	private final static String JDCB_DRIVER = "com.mysql.cj.jdbc.Driver";
-	private final static String DB_URL = "jdbc:mysql://14.38.252.76/restareadata?characterEncoding=UTF-8&serverTimezone=UTC";//mysql ¡÷º“
-	private final static String USER_NAME = "aoop";//æ∆¿Ãµ
-	private final static String PASSWORD = "0978";//∫Òπ¯
+	private final static String DB_URL = "jdbc:mysql://14.38.252.76/restareadata?characterEncoding=UTF-8&serverTimezone=UTC";//mysql Ï£ºÏÜå
+	private final static String USER_NAME = "aoop";//ÏïÑÏù¥Îîî
+	private final static String PASSWORD = "0978";//ÎπÑÎ≤à
 	private static Connection con = null;
-	private DBConnection() {}//¡¢±Ÿ x
+	private DBConnection() {}//Ï†ëÍ∑º x
 	public static Connection getInstance()
 	{
 		if(con==null)
@@ -16,12 +16,12 @@ public class DBConnection
 			try {
 				Class.forName(JDCB_DRIVER);
 				con = DriverManager.getConnection(DB_URL,USER_NAME,PASSWORD);
-				System.out.println("///////DBø¨∞·µ //////");
+				System.out.println("///////DBÏó∞Í≤∞Îê®//////");
 			}
 			catch(Exception e)
 			{
 				e.printStackTrace();
-				System.out.println("ø¨∞·ø¿∑˘");
+				System.out.println("Ïó∞Í≤∞Ïò§Î•ò");
 			}
 		}
 		return con;

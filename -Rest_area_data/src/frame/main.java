@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import database.Csvtodb;
 
-/*csvÆÄÀÏ db·Î ÀÌ½ÄµÇ´ÂÁö Å×½ºÆ®ÇÒ·Á°í ¸¸µç ÀÓ½ÃÅ¬·¡½º*/
+/*csvíŒŒì¼ dbë¡œ ì´ì‹ë˜ëŠ”ì§€ í…ŒìŠ¤íŠ¸í• ë ¤ê³  ë§Œë“  ì„ì‹œí´ë˜ìŠ¤*/
 public class main 
 {
 	public static void main(String args[]) throws IOException
