@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-/*csvÆÄÀÏÀÇ °æ·Î¸¦ ¹Ş¾Æ¼­ db¿¡ ÀúÀåÇØÁÖ´Â Å¬·¡½º*/
+/*csvíŒŒì¼ì˜ ê²½ë¡œë¥¼ ë°›ì•„ì„œ dbì— ì €ì¥í•´ì£¼ëŠ” í´ë˜ìŠ¤*/
 public class Csvtodb 
 {
 	private Connection con = null;
@@ -19,31 +19,31 @@ public class Csvtodb
 		con = DBConnection.getInstance();
 		ct = new CreteTable();
 	}
-	/*CSVÆÄÀÏÀÌÀÖ´Â °æ·Î¸¦ ¹Ş¾Æ¼­ db¿¡ ³Ö¾îÁØ´Ù.*/
+	/*CSVíŒŒì¼ì´ìˆëŠ” ê²½ë¡œë¥¼ ë°›ì•„ì„œ dbì— ë„£ì–´ì¤€ë‹¤.*/
     public void invert(String Location) throws SQLException, IOException
     {
-    	/*±âÁØ¿¬¿ùÀ» ¹Ş´Â ÄÚµå*/
-    	BufferedReader lineReader2 = new BufferedReader(new FileReader(Location));//°æ·Î¿¡ÀÖ´Â ÆÄÀÏ ÀĞÀ½
-		String lineText2 = null;//ÁÙ
-		String yearmonth = null;//±âÁØ¿¬¿ùÀ» ÀúÀåÇÒ ½ºÆ®¸µ
-		lineReader2.readLine();//Ã¹ÁÙÀº ±×³É ³Ñ±ä´Ù, Çì´õ¶óÀÎÀÓ.
-		lineText2 = lineReader2.readLine();//±×´ÙÀ½ÁÙÀ» ÀĞ¾î¼­ ÀúÀåÇÑ´Ù.
-		String[] data2 = lineText2.split(",");//±×µÚ ¹İÁ¡À¸·Î ³ª´«´Ù.
-		yearmonth = data2[0];//¹İÁ¡À¸·Î ³ª´« °¢ ¿­µéÁß Ã¹¹øÂ° ±âÁØ¿¬¿ùÀ» ÀúÀåÇÑ´Ù.
-    	lineReader2.close();//´İ±â
-    	if(ct.does_exist(yearmonth))//¹æ±İ ±¸ÇÑ ±âÁØ¿¬¿ùÀ» °¡Áø Å×ÀÌºíÀÌ Á¸ÀçÇÏ´Â°¡?
+    	/*ê¸°ì¤€ì—°ì›”ì„ ë°›ëŠ” ì½”ë“œ*/
+    	BufferedReader lineReader2 = new BufferedReader(new FileReader(Location));//ê²½ë¡œì—ìˆëŠ” íŒŒì¼ ì½ìŒ
+		String lineText2 = null;//ì¤„
+		String yearmonth = null;//ê¸°ì¤€ì—°ì›”ì„ ì €ì¥í•  ìŠ¤íŠ¸ë§
+		lineReader2.readLine();//ì²«ì¤„ì€ ê·¸ëƒ¥ ë„˜ê¸´ë‹¤, í—¤ë”ë¼ì¸ì„.
+		lineText2 = lineReader2.readLine();//ê·¸ë‹¤ìŒì¤„ì„ ì½ì–´ì„œ ì €ì¥í•œë‹¤.
+		String[] data2 = lineText2.split(",");//ê·¸ë’¤ ë°˜ì ìœ¼ë¡œ ë‚˜ëˆˆë‹¤.
+		yearmonth = data2[0];//ë°˜ì ìœ¼ë¡œ ë‚˜ëˆˆ ê° ì—´ë“¤ì¤‘ ì²«ë²ˆì§¸ ê¸°ì¤€ì—°ì›”ì„ ì €ì¥í•œë‹¤.
+    	lineReader2.close();//ë‹«ê¸°
+    	if(ct.does_exist(yearmonth))//ë°©ê¸ˆ êµ¬í•œ ê¸°ì¤€ì—°ì›”ì„ ê°€ì§„ í…Œì´ë¸”ì´ ì¡´ì¬í•˜ëŠ”ê°€?
     	{
-    		System.out.println("µ¥ÀÌÅÍ°¡ ÀÌ¹Ì Á¸ÀçÇÕ´Ï´Ù.");
+    		System.out.println("ë°ì´í„°ê°€ ì´ë¯¸ ì¡´ì¬í•©ë‹ˆë‹¤.");
     		return;
     	}
-    	else//Ã³À½ ¹Ş´Â csvÆÄÀÏÀÌ¶ó¸é,
+    	else//ì²˜ìŒ ë°›ëŠ” csvíŒŒì¼ì´ë¼ë©´,
     	{
-    		ct.createAction(yearmonth);//¸ÕÀú Å×ÀÌºíÀ» ¸¸µé¾îÁØ´Ù.
+    		ct.createAction(yearmonth);//ë¨¼ì € í…Œì´ë¸”ì„ ë§Œë“¤ì–´ì¤€ë‹¤.
     		
     		String sql = "INSERT INTO table_"+yearmonth+" (stndate, slranking, slrankingra, racode, raname, stcode, stname) VALUES (?, ?, ?, ?, ?, ?, ?)";
     	    ps = con.prepareStatement(sql);
-    	    BufferedReader lineReader = new BufferedReader(new FileReader(Location));//°æ·Î¿¡ÀÖ´Â ÆÄÀÏ ÀĞÀ½
-    	    String lineText = null;//ÁÙ
+    	    BufferedReader lineReader = new BufferedReader(new FileReader(Location));//ê²½ë¡œì—ìˆëŠ” íŒŒì¼ ì½ìŒ
+    	    String lineText = null;//ì¤„
     	    
     	    int count = 0;
     	 
@@ -51,14 +51,14 @@ public class Csvtodb
     	 
     	    while ((lineText = lineReader.readLine()) != null)
     	    {
-    		    String[] data = lineText.split(",");//¹İÁ¡À¸·Î ³ª´«´Ù.
-    	        //String standard_date = data[0];//±âÁØ¿¬¿ù
-    	        String sales_ranking = data[1];//ÆÇ¸Å¼øÀ§
-    	        String sales_ranking_rest_area = data[2];//ÈŞ°Ô¼Ò³» ÆÇ¸Å¼øÀ§
-                String rest_area_code = data[3];//ÈŞ°Ô¼ÒÄÚµå
-                String rest_area_name = data[4];//ÈŞ°Ô¼ÒÀÌ¸§
-                String store_code = data[5];//ÆÇ¸ÅÁ¡ÄÚµå
-                String store_name = data[6];//ÆÇ¸ÅÁ¡ÀÌ¸§
+    		    String[] data = lineText.split(",");//ë°˜ì ìœ¼ë¡œ ë‚˜ëˆˆë‹¤.
+    	        //String standard_date = data[0];//ê¸°ì¤€ì—°ì›”
+    	        String sales_ranking = data[1];//íŒë§¤ìˆœìœ„
+    	        String sales_ranking_rest_area = data[2];//íœ´ê²Œì†Œë‚´ íŒë§¤ìˆœìœ„
+                String rest_area_code = data[3];//íœ´ê²Œì†Œì½”ë“œ
+                String rest_area_name = data[4];//íœ´ê²Œì†Œì´ë¦„
+                String store_code = data[5];//íŒë§¤ì ì½”ë“œ
+                String store_name = data[6];//íŒë§¤ì ì´ë¦„
     	        
     	        ps.setString(1,yearmonth);
     	        ps.setString(2,sales_ranking);
@@ -78,6 +78,6 @@ public class Csvtodb
     	    // execute the remaining queries
     	    ps.executeBatch();
     	 }
-    	System.out.println("µ¥ÀÌÅÍº£ÀÌ½º ÀÌ½Ä¿Ï·á");
+    	System.out.println("ë°ì´í„°ë² ì´ìŠ¤ ì´ì‹ì™„ë£Œ");
     	}
 }

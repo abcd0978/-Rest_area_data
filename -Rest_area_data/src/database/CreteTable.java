@@ -9,46 +9,46 @@ import java.sql.Statement;
 import com.mysql.cj.protocol.Resultset;
 import com.mysql.cj.xdevapi.PreparableStatement;
 
-/*±âÁØ¿¬¿ùÀ» ¹Ş¾Æ ±âÁØ¿¬¿ù¿¡ ´ëÀÀÇÏ´Â µ¥ÀÌÅÍÅ×ÀÌºíÀ» »ı¼ºÇÏ´Â Å¬·¡½ºÀÌ´Ù.*/
+/*ê¸°ì¤€ì—°ì›”ì„ ë°›ì•„ ê¸°ì¤€ì—°ì›”ì— ëŒ€ì‘í•˜ëŠ” ë°ì´í„°í…Œì´ë¸”ì„ ìƒì„±í•˜ëŠ” í´ë˜ìŠ¤ì´ë‹¤.*/
 public class CreteTable 
 {
-	private PreparedStatement ps = null;//Äõ¸®¹®À» ½ÇÇàÇÏ´Â °´Ã¼
-	private Connection con = null;//DB¿¡ ¿¬°áÇÏ´Â °´Ã¼
+	private PreparedStatement ps = null;//ì¿¼ë¦¬ë¬¸ì„ ì‹¤í–‰í•˜ëŠ” ê°ì²´
+	private Connection con = null;//DBì— ì—°ê²°í•˜ëŠ” ê°ì²´
 	private ResultSet rs = null;
 	private String query = "SELECT 1 FROM Information_schema.tables WHERE table_name = ?";
 	public CreteTable()
 	{
-		con = DBConnection.getInstance();//DBConnectionÀÎ½ºÅÏ½º ¹Ş¾Æ¿À±â(DB¿¡ ¿¬°áÇÑ´Ù.)
+		con = DBConnection.getInstance();//DBConnectionì¸ìŠ¤í„´ìŠ¤ ë°›ì•„ì˜¤ê¸°(DBì— ì—°ê²°í•œë‹¤.)
 	}
-	//Å×ÀÌºíÀÌ Á¸ÀçÇÏ´ÂÁö ¾ÈÇÏ´ÂÁö È®ÀÎÇÏ´Â ¸Ş¼Òµå
+	//í…Œì´ë¸”ì´ ì¡´ì¬í•˜ëŠ”ì§€ ì•ˆí•˜ëŠ”ì§€ í™•ì¸í•˜ëŠ” ë©”ì†Œë“œ
 	public boolean does_exist(String yearmonth) throws SQLException
 	{
 		ps = con.prepareStatement(query);
-		ps.setString(1,"table_"+yearmonth);//¾Õ¿¡ table¹®ÀÚ¿­À» Ãß°¡ÇÑ ÀÌÀ¯´Â ¼ıÀÚ·Î¸¸ Å×ÀÌºí¸íÀ» Á¤ÇÏ¸é ¿À·ù¸¦ ÀÏÀ¸Å°±â¶§¹®.
-		System.out.println(ps.toString());//µğ¹ö±×¸Ş¼¼Áö
-		ps.execute();//Äõ¸®½ÇÇà
-		rs = ps.getResultSet();//½ÇÇà°á°ú ¹Ş¾Æ¿À±â
+		ps.setString(1,"table_"+yearmonth);//ì•ì— tableë¬¸ìì—´ì„ ì¶”ê°€í•œ ì´ìœ ëŠ” ìˆ«ìë¡œë§Œ í…Œì´ë¸”ëª…ì„ ì •í•˜ë©´ ì˜¤ë¥˜ë¥¼ ì¼ìœ¼í‚¤ê¸°ë•Œë¬¸.
+		System.out.println(ps.toString());//ë””ë²„ê·¸ë©”ì„¸ì§€
+		ps.execute();//ì¿¼ë¦¬ì‹¤í–‰
+		rs = ps.getResultSet();//ì‹¤í–‰ê²°ê³¼ ë°›ì•„ì˜¤ê¸°
 		if(rs.next())
-			return true;//Å×ÀÌºíÀÌ Á¸ÀçÇÏ¸é true¹İÈ¯
+			return true;//í…Œì´ë¸”ì´ ì¡´ì¬í•˜ë©´ trueë°˜í™˜
 		else
-			return false;//Å×ÀÌºíÀÌ Á¸ÀçÇÏÁö ¾ÊÀ¸¸é false¹İÈ¯
+			return false;//í…Œì´ë¸”ì´ ì¡´ì¬í•˜ì§€ ì•Šìœ¼ë©´ falseë°˜í™˜
 	}
-	//Å×ÀÌºíÀ» »ı¼ºÇØÁÖ´Â ¸Ş¼ÒµåÀÌ´Ù.
+	//í…Œì´ë¸”ì„ ìƒì„±í•´ì£¼ëŠ” ë©”ì†Œë“œì´ë‹¤.
 	public void createAction(String yearmonth) throws SQLException
 	{
-		System.out.println("Å×ÀÌºí »ı¼º½ÃÀÛ");
+		System.out.println("í…Œì´ë¸” ìƒì„±ì‹œì‘");
 		String create_query = "create table table_"+yearmonth
 				+ "("
-				+ "stndate int,"//±âÁØ¿¬¿ù
-				+ "slranking int,"//ÆÇ¸Å¼øÀ§
-				+ "slrankingra int,"//ÈŞ°Ô¼Ò³» ÆÇ¸Å¼øÀ§
-				+ "racode varchar(10),"//ÈŞ°Ô¼Ò ÄÚµå
-				+ "raname varchar(30),"//ÈŞ°Ô¼Ò¸í
-				+ "stcode int,"//¸ÅÀåÄÚµå
-				+ "stname varchar(30)"//¸ÅÀåÀÌ¸§
+				+ "stndate int,"//ê¸°ì¤€ì—°ì›”
+				+ "slranking int,"//íŒë§¤ìˆœìœ„
+				+ "slrankingra int,"//íœ´ê²Œì†Œë‚´ íŒë§¤ìˆœìœ„
+				+ "racode varchar(10),"//íœ´ê²Œì†Œ ì½”ë“œ
+				+ "raname varchar(30),"//íœ´ê²Œì†Œëª…
+				+ "stcode int,"//ë§¤ì¥ì½”ë“œ
+				+ "stname varchar(30)"//ë§¤ì¥ì´ë¦„
 				+ ")";
-		ps.execute(create_query);//Å×ÀÌºí »ı¼º
-		System.out.println("Å×ÀÌºí »ı¼º¿Ï·á");
+		ps.execute(create_query);//í…Œì´ë¸” ìƒì„±
+		System.out.println("í…Œì´ë¸” ìƒì„±ì™„ë£Œ");
 	}
 }
 	

@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.*; // ActionListener & ActionEvent ÆĞÅ°Áö¸¦ À§ÇÑ Import
+import java.awt.event.*; // ActionListener & ActionEvent íŒ¨í‚¤ì§€ë¥¼ ìœ„í•œ Import
 
 public class MainFrame{
    
@@ -15,7 +15,7 @@ public class MainFrame{
    
    
    public static void main(String[] args) {   
-      //¸ŞÀÎ ¸Ş¼Òµå ½ÇÇà
+      //ë©”ì¸ ë©”ì†Œë“œ ì‹¤í–‰
       MainFrame MF = new MainFrame();
       MF.printFunc();
       MF.JframeFunc();
@@ -26,28 +26,28 @@ public class MainFrame{
    }
    
    public void JframeFunc() {
-      JFrame frame = new JFrame(); // ÇÁ·¹ÀÓ »ı¼º
+      JFrame frame = new JFrame(); // í”„ë ˆì„ ìƒì„±
       
-      frame.setTitle("°í¼Óµµ·Î ÈŞ°Ô¼Ò ¸ÅÀå ÇÁ·Î±×·¥");
+      frame.setTitle("ê³ ì†ë„ë¡œ íœ´ê²Œì†Œ ë§¤ì¥ í”„ë¡œê·¸ë¨");
       
-      jmb = new JMenuBar(); // JMenuBar »ı¼º
+      jmb = new JMenuBar(); // JMenuBar ìƒì„±
       
-      jm01 = new JMenu("ÆÄÀÏ"); // Menu »ı¼º
-      m01_item = new JMenuItem("ÆÄÀÏ ºÒ·¯¿À±â"); // Item »ı¼º
+      jm01 = new JMenu("íŒŒì¼"); // Menu ìƒì„±
+      m01_item = new JMenuItem("íŒŒì¼ ë¶ˆëŸ¬ì˜¤ê¸°"); // Item ìƒì„±
       jm01.add(m01_item);
-      //jm.addSeparator(); // Menu Item ±¸ºĞ¼±
-      jm01.add(new JMenuItem("ÆÄÀÏ ÀúÀåÇÏ±â"));
+      //jm.addSeparator(); // Menu Item êµ¬ë¶„ì„ 
+      jm01.add(new JMenuItem("íŒŒì¼ ì €ì¥í•˜ê¸°"));
       
-      jmb.add(jm01); //JmenuBar¿¡ Menu Item Ãß°¡
+      jmb.add(jm01); //JmenuBarì— Menu Item ì¶”ê°€
 
       
-      jm03 = new JMenu("¸ÅÀå Á¤º¸"); // Menu »ı¼º
-      m03_item = new JMenuItem("¼öÁ¤(Modify)"); // Item »ı¼º
+      jm03 = new JMenu("ë§¤ì¥ ì •ë³´"); // Menu ìƒì„±
+      m03_item = new JMenuItem("ìˆ˜ì •(Modify)"); // Item ìƒì„±
       jm03.add(m03_item);
-      jm03.add(new JMenuItem("»ğÀÔ(insert)"));
-      jm03.add(new JMenuItem("»èÁ¦(Delete)"));
+      jm03.add(new JMenuItem("ì‚½ì…(insert)"));
+      jm03.add(new JMenuItem("ì‚­ì œ(Delete)"));
       
-      jmb.add(jm03); //JmenuBar¿¡ Menu Item Ãß°¡
+      jmb.add(jm03); //JmenuBarì— Menu Item ì¶”ê°€
 
       
       //frame.getContentPane().add(BorderLayout.NORTH, jmb);
@@ -58,42 +58,42 @@ public class MainFrame{
       
       JToolBar jtb = new JToolBar();
       JComboBox combo1 = new JComboBox();
-      combo1.addItem("ÀüÃ¼ ÈŞ°Ô¼Ò");
+      combo1.addItem("ì „ì²´ íœ´ê²Œì†Œ");
       
       JComboBox combo2 = new JComboBox();
-      combo2.addItem("1¿ù");
-      combo2.addItem("2¿ù");
-      combo2.addItem("3¿ù");
-      combo2.addItem("4¿ù");
-      combo2.addItem("5¿ù");
-      combo2.addItem("6¿ù");
-      combo2.addItem("7¿ù");
-      combo2.addItem("8¿ù");
-      combo2.addItem("9¿ù");
-      combo2.addItem("10¿ù");
-      combo2.addItem("11¿ù");
-      combo2.addItem("12¿ù");
+      combo2.addItem("1ì›”");
+      combo2.addItem("2ì›”");
+      combo2.addItem("3ì›”");
+      combo2.addItem("4ì›”");
+      combo2.addItem("5ì›”");
+      combo2.addItem("6ì›”");
+      combo2.addItem("7ì›”");
+      combo2.addItem("8ì›”");
+      combo2.addItem("9ì›”");
+      combo2.addItem("10ì›”");
+      combo2.addItem("11ì›”");
+      combo2.addItem("12ì›”");
       
       JComboBox combo3 = new JComboBox();
-      combo3.addItem("1¿ù");
-      combo3.addItem("2¿ù");
-      combo3.addItem("3¿ù");
-      combo3.addItem("4¿ù");
-      combo3.addItem("5¿ù");
-      combo3.addItem("6¿ù");
-      combo3.addItem("7¿ù");
-      combo3.addItem("8¿ù");
-      combo3.addItem("9¿ù");
-      combo3.addItem("10¿ù");
-      combo3.addItem("11¿ù");
-      combo3.addItem("12¿ù");
+      combo3.addItem("1ì›”");
+      combo3.addItem("2ì›”");
+      combo3.addItem("3ì›”");
+      combo3.addItem("4ì›”");
+      combo3.addItem("5ì›”");
+      combo3.addItem("6ì›”");
+      combo3.addItem("7ì›”");
+      combo3.addItem("8ì›”");
+      combo3.addItem("9ì›”");
+      combo3.addItem("10ì›”");
+      combo3.addItem("11ì›”");
+      combo3.addItem("12ì›”");
       
       jtb.add(combo1);
       jtb.add(combo2);
       jtb.add(combo3);
       
-      b01 = new JButton("Á¶È¸");
-      b02 = new JButton("Åë°è");
+      b01 = new JButton("ì¡°íšŒ");
+      b02 = new JButton("í†µê³„");
       jtb.add(b01);
       jtb.add(b02);
       
@@ -101,25 +101,25 @@ public class MainFrame{
       frame.getContentPane().add(jtb,BorderLayout.NORTH);
       
       
-      // ¹öÆ° »ı¼º
+      // ë²„íŠ¼ ìƒì„±
       button01 = new JButton("Button 01");
       button02 = new JButton("Button 02");
       button03 = new JButton("Button 03");
       
-      // Button ¸®½º³Ê ¸ñ·Ï¿¡ µî·Ï
+      // Button ë¦¬ìŠ¤ë„ˆ ëª©ë¡ì— ë“±ë¡
       button01.addActionListener(new btn01Listener());
       
-      // Ã¢ close ½Ã¿¡ ÇÁ·Î±×·¥ Á¾·á
+      // ì°½ close ì‹œì— í”„ë¡œê·¸ë¨ ì¢…ë£Œ
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       
-      // ¹öÆ°À» ÇÁ·¹ÀÓÀÇ  Content Pane(³»¿ëÆ²)¿¡ Ãß°¡
+      // ë²„íŠ¼ì„ í”„ë ˆì„ì˜  Content Pane(ë‚´ìš©í‹€)ì— ì¶”ê°€
       frame.getContentPane().add(BorderLayout.SOUTH, button01);
       frame.getContentPane().add(BorderLayout.EAST, button02);
       frame.getContentPane().add(BorderLayout.WEST, button03);
       
-      frame.setSize(500, 550); // ÇÁ·¹ÀÓ Å©±â
+      frame.setSize(500, 550); // í”„ë ˆì„ í¬ê¸°
       
-      frame.setVisible(true); // ÇÁ·¹ÀÓ È­¸é Ç¥½Ã ¼³Á¤
+      frame.setVisible(true); // í”„ë ˆì„ í™”ë©´ í‘œì‹œ ì„¤ì •
    }
    
    class btn01Listener implements ActionListener{
@@ -134,7 +134,7 @@ public class MainFrame{
    }
    
    
-   // ¹öÆ°Àº ÇØ´ç ¸Ş¼Òµå È£ÃâÀ» ÅëÇØ ÀÌº¥Æ® ¹ß»ıÀ» ¾Ë·ÁÁÜ
+   // ë²„íŠ¼ì€ í•´ë‹¹ ë©”ì†Œë“œ í˜¸ì¶œì„ í†µí•´ ì´ë²¤íŠ¸ ë°œìƒì„ ì•Œë ¤ì¤Œ
    class Menu01ActionListener implements ActionListener
    {
 
@@ -142,7 +142,7 @@ public class MainFrame{
       public void actionPerformed(ActionEvent e) 
       {
          // TODO Auto-generated method stub
-         button03.setText("Å¬¸¯ ÀÌº¥Æ®");
+         button03.setText("í´ë¦­ ì´ë²¤íŠ¸");
       }
       
    }
