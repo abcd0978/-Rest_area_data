@@ -4,12 +4,13 @@ import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.*; // ActionListener & ActionEvent 패키지를 위한 Import
 
 public class MainFrame{
    
    JButton button01, button02, button03, b01, b02;
-   JMenu jm01, jm03;
+   JMenu jm01,jm02,jm03;
    JMenuBar jmb;
    JMenuItem m01_item, m02_item, m03_item;
    
@@ -39,7 +40,6 @@ public class MainFrame{
       jm01.add(new JMenuItem("파일 저장하기"));
       
       jmb.add(jm01); //JmenuBar에 Menu Item 추가
-
       
       jm03 = new JMenu("매장 정보"); // Menu 생성
       m03_item = new JMenuItem("수정(Modify)"); // Item 생성
@@ -49,12 +49,24 @@ public class MainFrame{
       
       jmb.add(jm03); //JmenuBar에 Menu Item 추가
 
+      ImageIcon asc=new ImageIcon("C:\\Users\\Jinho Park\\eclipse-workspace\\오름차순.png"); //이미지 아이콘 생성
+      ImageIcon desc=new ImageIcon("C:\\Users\\Jinho Park\\eclipse-workspace\\내림차순.png");      
+      Image as = asc.getImage();
+      Image des=desc.getImage();
+      
+      jm02=new JMenu("정렬"); //Menu 생성
+      m02_item=new JMenuItem(asc); //Item 생성
+      jm02.add(m02_item);
+      jm02.add(new JMenuItem(desc));
+      
+      jmb.add(jm02); //JmenuBar에 Menu Item 추가
       
       //frame.getContentPane().add(BorderLayout.NORTH, jmb);
       frame.setJMenuBar(jmb);
       
       m01_item.addActionListener(new Menu01ActionListener());
       m03_item.addActionListener(new Menu01ActionListener());
+      m02_item.addActionListener(new Menu01ActionListener());
       
       JToolBar jtb = new JToolBar();
       JComboBox combo1 = new JComboBox();
