@@ -11,7 +11,7 @@ public class main
 	{
 		Csvtodb cs = new Csvtodb();
 		try {
-			cs.invert("C:\\Users\\abcd0\\Downloads\\ETC____202009\\ETC_R3_05_02_398358.csv");
+			cs.invert("C:\\Users\\고나연\\Desktop\\csv\\ETC_R3_05_02_398358.csv");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

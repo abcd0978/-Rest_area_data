@@ -14,7 +14,6 @@ public class MainFrame{
    JMenuBar jmb;
    JMenuItem m01_item, m02_item, m03_item;
    
-   
    public static void main(String[] args) {   
       //메인 메소드 실행
       MainFrame MF = new MainFrame();
@@ -41,25 +40,27 @@ public class MainFrame{
       
       jmb.add(jm01); //JmenuBar에 Menu Item 추가
       
-      jm03 = new JMenu("매장 정보"); // Menu 생성
-      m03_item = new JMenuItem("수정(Modify)"); // Item 생성
-      jm03.add(m03_item);
-      jm03.add(new JMenuItem("삽입(insert)"));
-      jm03.add(new JMenuItem("삭제(Delete)"));
+      jm02 = new JMenu("매장 정보"); // Menu 생성
+      m02_item = new JMenuItem("수정(Modify)"); // Item 생성
+      jm02.add(m02_item);
+      jm02.add(new JMenuItem("삽입(Insert)"));
+      jm02.add(new JMenuItem("삭제(Delete)"));
       
-      jmb.add(jm03); //JmenuBar에 Menu Item 추가
-
-      ImageIcon asc=new ImageIcon("C:\\Users\\Jinho Park\\eclipse-workspace\\오름차순.png"); //이미지 아이콘 생성
-      ImageIcon desc=new ImageIcon("C:\\Users\\Jinho Park\\eclipse-workspace\\내림차순.png");      
+      jmb.add(jm02); //JmenuBar에 Menu Item 추가
+      
+      
+      //일단은 이미지를 본인 컴퓨터 경로로 바꿔주셔야 뜹니다!
+      ImageIcon asc=new ImageIcon("C:/Users/고나연/Desktop/-Rest_area_data/-Rest_area_data/src/image/오름차순.png"); //이미지 아이콘 생성
+      ImageIcon desc=new ImageIcon("C:/Users/고나연/Desktop/-Rest_area_data/-Rest_area_data/src/image/내림차순.png");      
       Image as = asc.getImage();
       Image des=desc.getImage();
       
-      jm02=new JMenu("정렬"); //Menu 생성
-      m02_item=new JMenuItem(asc); //Item 생성
-      jm02.add(m02_item);
-      jm02.add(new JMenuItem(desc));
+      jm03=new JMenu("정렬"); //Menu 생성
+      m03_item=new JMenuItem(asc); //Item 생성
+      jm03.add(m03_item);
+      jm03.add(new JMenuItem(desc));
       
-      jmb.add(jm02); //JmenuBar에 Menu Item 추가
+      jmb.add(jm03); //JmenuBar에 Menu Item 추가
       
       //frame.getContentPane().add(BorderLayout.NORTH, jmb);
       frame.setJMenuBar(jmb);
@@ -129,12 +130,13 @@ public class MainFrame{
       frame.getContentPane().add(BorderLayout.EAST, button02);
       frame.getContentPane().add(BorderLayout.WEST, button03);
       
+            
       frame.setSize(500, 550); // 프레임 크기
       
       frame.setVisible(true); // 프레임 화면 표시 설정
    }
    
-   class btn01Listener implements ActionListener{
+class btn01Listener implements ActionListener{
 
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -145,6 +147,7 @@ public class MainFrame{
       
    }
    
+     
    
    // 버튼은 해당 메소드 호출을 통해 이벤트 발생을 알려줌
    class Menu01ActionListener implements ActionListener
