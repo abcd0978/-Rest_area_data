@@ -1,18 +1,27 @@
 package frame;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import database.Csvtodb;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.*; // ActionListener & ActionEvent 패키지를 위한 Import
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class MainFrame{
    
    JButton button01, button02, button03, b01, b02;
    JMenu jm01,jm02,jm03;
    JMenuBar jmb;
-   JMenuItem m01_item, m02_item, m03_item;
+   JMenuItem load,save;//불러오기,저장
+   JMenuItem modify,insert,delete;//수정,삽입,삭제,
+   JMenuItem asc,desc;//오름,내림
+   Csvtodb ctd;//db객체 매개변수
    
    public static void main(String[] args) {   
       //메인 메소드 실행
@@ -25,49 +34,55 @@ public class MainFrame{
       System.out.println("------Programe TEST1------");
    }
    
-   public void JframeFunc() {
+   public void JframeFunc() 
+   {
       JFrame frame = new JFrame(); // 프레임 생성
       
       frame.setTitle("고속도로 휴게소 매장 프로그램");
       
       jmb = new JMenuBar(); // JMenuBar 생성
       
-      jm01 = new JMenu("파일"); // Menu 생성
-      m01_item = new JMenuItem("파일 불러오기"); // Item 생성
-      jm01.add(m01_item);
-      //jm.addSeparator(); // Menu Item 구분선
-      jm01.add(new JMenuItem("파일 저장하기"));
       
-      jmb.add(jm01); //JmenuBar에 Menu Item 추가
+      jm01 = new JMenu("파일"); // Menu 생성
+      
+      load = new JMenuItem("파일 불러오기"); // load메뉴아이템
+      save = new JMenuItem("파일 저장하기"); //save메뉴아이템
+      
+      jm01.add(save);//Menu에 MenuItem추가
+      jm01.add(load);//Menu에 MenuItem추가
+      
+      jmb.add(jm01); //JmenuBar에 Menu추가
+      
       
       jm02 = new JMenu("매장 정보"); // Menu 생성
-      m02_item = new JMenuItem("수정(Modify)"); // Item 생성
-      jm02.add(m02_item);
-      jm02.add(new JMenuItem("삽입(Insert)"));
-      jm02.add(new JMenuItem("삭제(Delete)"));
-      
-      jmb.add(jm02); //JmenuBar에 Menu Item 추가
+      modify = new JMenuItem("수정(Modify)"); // Item 생성
+      insert = new JMenuItem("삽입(Insert)");
+      delete = new JMenuItem("삭제(Delete)");
       
       
-      //일단은 이미지를 본인 컴퓨터 경로로 바꿔주셔야 뜹니다!
-      ImageIcon asc=new ImageIcon("C:/Users/고나연/Desktop/-Rest_area_data/-Rest_area_data/src/image/오름차순.png"); //이미지 아이콘 생성
-      ImageIcon desc=new ImageIcon("C:/Users/고나연/Desktop/-Rest_area_data/-Rest_area_data/src/image/내림차순.png");      
+      jm02.add(modify);
+      jm02.add(insert);
+      jm02.add(delete);
+      jmb.add(jm02); //JmenuBar에 Menu추가
+      
+      
+      
+      ImageIcon asc=new ImageIcon("src/image/오름차순.png"); //이미지 아이콘 생성
+      ImageIcon desc=new ImageIcon("src/image/내림차순.png");      
       Image as = asc.getImage();
-      Image des=desc.getImage();
+      Image des = desc.getImage();
       
       jm03=new JMenu("정렬"); //Menu 생성
-      m03_item=new JMenuItem(asc); //Item 생성
-      jm03.add(m03_item);
-      jm03.add(new JMenuItem(desc));
-      
+      this.asc = new JMenuItem(asc); //Item 생성
+      this.desc = new JMenuItem(desc);
+      jm03.add(this.asc);
+      jm03.add(this.desc);
       jmb.add(jm03); //JmenuBar에 Menu Item 추가
       
       //frame.getContentPane().add(BorderLayout.NORTH, jmb);
       frame.setJMenuBar(jmb);
       
-      m01_item.addActionListener(new Menu01ActionListener());
-      m03_item.addActionListener(new Menu01ActionListener());
-      m02_item.addActionListener(new Menu01ActionListener());
+      load.addActionListener(new Menu01ActionListener());
       
       JToolBar jtb = new JToolBar();
       JComboBox combo1 = new JComboBox();
@@ -141,7 +156,6 @@ class btn01Listener implements ActionListener{
       @Override
       public void actionPerformed(ActionEvent e) {
          // TODO Auto-generated method stub
-         
          button01.setText("button is Cliked");
       }
       
@@ -149,17 +163,29 @@ class btn01Listener implements ActionListener{
    
      
    
-   // 버튼은 해당 메소드 호출을 통해 이벤트 발생을 알려줌
+   // 파일불러오기 메뉴아이템 
    class Menu01ActionListener implements ActionListener
    {
-
+	   
       @Override
       public void actionPerformed(ActionEvent e) 
       {
-         // TODO Auto-generated method stub
          button03.setText("클릭 이벤트");
+         JFileChooser fileChooser = new JFileChooser();
+         fileChooser.setFileFilter(new FileNameExtensionFilter("csv파일","csv"));
+         int returnval = fileChooser.showOpenDialog(null);//열기옵션으로 filechooser를 연뒤에 행동에 따라 return 값이 나온다.
+         if(returnval == JFileChooser.APPROVE_OPTION)//yes,ok,열기 등 확인버튼을 누르면 실행되는것
+         {
+             String Path = fileChooser.getSelectedFile().getPath();//선택된파일의 경로를 스트링으로 저장
+             ctd = new Csvtodb();
+             System.out.println(Path);
+             try {
+    			ctd.invert(Path);
+    		} catch (SQLException | IOException e1) {
+    			e1.printStackTrace();
+    		}
+         }
       }
-      
-   }
 
+   }
 }

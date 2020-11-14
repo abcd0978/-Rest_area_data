@@ -1,9 +1,11 @@
 package database;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -42,7 +44,7 @@ public class Csvtodb
     		
     		String sql = "INSERT INTO table_"+yearmonth+" (stndate, slranking, slrankingra, racode, raname, stcode, stname) VALUES (?, ?, ?, ?, ?, ?, ?)";
     	    ps = con.prepareStatement(sql);
-    	    BufferedReader lineReader = new BufferedReader(new FileReader(Location));//경로에있는 파일 읽음
+    	    BufferedReader lineReader = new BufferedReader(new InputStreamReader(new FileInputStream(Location),"MS949"));//경로에있는 파일 읽음
     	    String lineText = null;//줄
     	    
     	    int count = 0;
