@@ -3,7 +3,9 @@ package frame;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import database.Area;
 import database.Csvtodb;
+import database.LookupAndModify;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -12,6 +14,7 @@ import java.awt.Image;
 import java.awt.event.*; // ActionListener & ActionEvent 패키지를 위한 Import
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class MainFrame{
    
@@ -22,6 +25,7 @@ public class MainFrame{
    JMenuItem modify,insert,delete;//수정,삽입,삭제,
    JMenuItem asc,desc;//오름,내림
    Csvtodb ctd;//db객체 매개변수
+   LookupAndModify lu;
    
    public static void main(String[] args) {   
       //메인 메소드 실행
@@ -82,7 +86,8 @@ public class MainFrame{
       //frame.getContentPane().add(BorderLayout.NORTH, jmb);
       frame.setJMenuBar(jmb);
       
-      load.addActionListener(new Menu01ActionListener());
+      load.addActionListener(new LoadActionListener());
+      save.addActionListener(new SaveActionListener());
       
       JToolBar jtb = new JToolBar();
       JComboBox combo1 = new JComboBox();
@@ -131,8 +136,8 @@ public class MainFrame{
       
       // 버튼 생성
       button01 = new JButton("Button 01");
-      button02 = new JButton("Button 02");
-      button03 = new JButton("Button 03");
+      //button02 = new JButton("Button 02");
+      //button03 = new JButton("Button 03");
       
       // Button 리스너 목록에 등록
       button01.addActionListener(new btn01Listener());
@@ -142,8 +147,8 @@ public class MainFrame{
       
       // 버튼을 프레임의  Content Pane(내용틀)에 추가
       frame.getContentPane().add(BorderLayout.SOUTH, button01);
-      frame.getContentPane().add(BorderLayout.EAST, button02);
-      frame.getContentPane().add(BorderLayout.WEST, button03);
+      //frame.getContentPane().add(BorderLayout.EAST, button02);
+      //frame.getContentPane().add(BorderLayout.WEST, button03);
       
             
       frame.setSize(500, 550); // 프레임 크기
@@ -151,22 +156,30 @@ public class MainFrame{
       frame.setVisible(true); // 프레임 화면 표시 설정
    }
    
-class btn01Listener implements ActionListener{
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-         // TODO Auto-generated method stub
-         button01.setText("button is Cliked");
-      }
-      
-   }
+class btn01Listener implements ActionListener
+{
+	@Override
+	public void actionPerformed(ActionEvent e) 
+	{
+		lu = new LookupAndModify();
+		ArrayList<ArrayList<Area>> temp = lu.lookarea("평택휴게소",9,10);
+		for(int i=0;i<=1;i++)
+    	{
+			ArrayList<Area> temp1 = temp.get(i);
+			System.out.println((9+i)+"월달");
+    		for (Area area : temp1) 
+    		{
+    			System.out.println("가게이름:"+area.getStname()+"  가게 전체 순위:"+area.getSlranking());
+    		}
+    	}
+	}
+}
    
      
    
    // 파일불러오기 메뉴아이템 
-   class Menu01ActionListener implements ActionListener
+   class LoadActionListener implements ActionListener
    {
-	   
       @Override
       public void actionPerformed(ActionEvent e) 
       {
@@ -187,5 +200,13 @@ class btn01Listener implements ActionListener{
          }
       }
 
+   }
+   class SaveActionListener implements ActionListener
+   {
+	@Override
+	public void actionPerformed(ActionEvent e) 
+	{
+		System.out.println("wait for download");
+	}
    }
 }
