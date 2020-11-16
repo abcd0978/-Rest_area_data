@@ -1,20 +1,19 @@
 package frame;
 
+import java.awt.*;
+// ActionListener & ActionEvent 패키지를 위한 Import
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import database.Area;
 import database.Csvtodb;
 import database.LookupAndModify;
-
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.event.*; // ActionListener & ActionEvent 패키지를 위한 Import
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class MainFrame{
    
@@ -125,14 +124,11 @@ public class MainFrame{
       jtb.add(combo2);
       jtb.add(combo3);
       
-      b01 = new JButton("조회");
-      b02 = new JButton("통계");
-      jtb.add(b01);
-      jtb.add(b02);
+      b01 = new JButton("조회/통계");
       
+      jtb.add(b01);
       
       frame.getContentPane().add(jtb,BorderLayout.NORTH);
-      
       
       // 버튼 생성
       button01 = new JButton("Button 01");
@@ -154,6 +150,78 @@ public class MainFrame{
       frame.setSize(500, 550); // 프레임 크기
       
       frame.setVisible(true); // 프레임 화면 표시 설정
+      
+      //그래프 생성
+      DrawingPanel drawingPanel=new DrawingPanel();
+      frame.getContentPane().add(drawingPanel,BorderLayout.CENTER);
+      
+      JPanel p1=new JPanel();//패널 객체 생성
+      
+   }
+   class DrawingPanel extends JPanel{
+	   int jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec;
+	   public void paint(Graphics g) {
+		   g.clearRect(0,0,getWidth(),getHeight());
+		   g.drawLine(50,400,450,400);
+		   
+		   for(int gb=1;gb<13;gb++) { //그래프 배경 그리기
+			   g.drawString(gb*10+"",20,400-30*gb);//y축 표시값
+			   g.drawLine(50, 400-30*gb, 450, 400-30*gb); //x축 라인 그리기 20씩
+		   }
+		   g.drawLine(50, 20, 50, 400);
+		   g.drawString("1월", 70, 420);
+		   g.drawString("2월", 100, 420);
+		   g.drawString("3월", 130, 420);
+		   g.drawString("4월", 160, 420);
+		   g.drawString("5월", 190, 420);
+		   g.drawString("6월", 220, 420);
+		   g.drawString("7월", 250, 420);
+		   g.drawString("8월", 280, 420);
+		   g.drawString("9월", 310, 420);
+		   g.drawString("10월", 340, 420);
+		   g.drawString("11월", 370, 420);
+		   g.drawString("12월", 400, 420);
+		   g.setColor(Color.red);
+		   
+		   if(jan>0)
+			   g.fillRect(80, 450-jan*2, 10, jan*2);
+		   if(feb>0)
+			   g.fillRect(110, 450-feb*2, 10, feb*2);
+		   if(mar>0)
+			   g.fillRect(140, 450-mar*2, 10, mar*2);
+		   if(apr>0)
+			   g.fillRect(170, 450-apr*2, 10, apr*2);
+		   if(may>0)
+			   g.fillRect(200, 450-may*2, 10, may*2);
+		   if(jun>0)
+			   g.fillRect(230, 450-jun*2, 10, jun*2);
+		   if(jul>0)
+			   g.fillRect(260, 450-jul*2, 10, jul*2);
+		   if(aug>0)
+			   g.fillRect(290, 450-aug*2, 10, aug*2);
+		   if(sep>0)
+			   g.fillRect(320, 450-sep*2, 10, sep*2);
+		   if(oct>0)
+			   g.fillRect(350, 450-oct*2, 10, oct*2);
+		   if(nov>0)
+			   g.fillRect(380, 450-nov*2, 10, nov*2);
+		   if(dec>0)
+			   g.fillRect(410, 450-dec*2, 10, dec*2);
+	   }
+	   void setPoint(int jan,int feb,int mar,int apr,int may,int jun,int jul,int aug,int sep,int oct,int nov,int dec) {
+		   this.jan=jan;
+		   this.feb=feb;
+		   this.mar=mar;
+		   this.apr=apr;
+		   this.may=may;
+		   this.jun=jun;
+		   this.jul=jul;
+		   this.aug=aug;
+		   this.sep=sep;
+		   this.oct=oct;
+		   this.nov=nov;
+		   this.dec=dec;
+	   }
    }
    
 class btn01Listener implements ActionListener
