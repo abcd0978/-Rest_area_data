@@ -95,38 +95,40 @@ public class MainFrame
       save.addActionListener(new SaveActionListener());
       
       jtb = new JToolBar();
-      combo1 = new JComboBox<String>();
-      combo1.addItem("전체 휴게소");
+      JTextField jn = new JTextField(10);
+      
       
       combo2 = new JComboBox<String>();
-      combo2.addItem("1월");
-      combo2.addItem("2월");
-      combo2.addItem("3월");
-      combo2.addItem("4월");
-      combo2.addItem("5월");
-      combo2.addItem("6월");
-      combo2.addItem("7월");
-      combo2.addItem("8월");
-      combo2.addItem("9월");
-      combo2.addItem("10월");
-      combo2.addItem("11월");
-      combo2.addItem("12월");
+      combo2.addItem("2019-11월");
+      combo2.addItem("2019-12월");
+      combo2.addItem("2020-1월");
+      combo2.addItem("2020-2월");
+      combo2.addItem("2020-3월");
+      combo2.addItem("2020-4월");
+      combo2.addItem("2020-5월");
+      combo2.addItem("2020-6월");
+      combo2.addItem("2020-7월");
+      combo2.addItem("2020-8월");
+      combo2.addItem("2020-9월");
+      combo2.addItem("2020-10월");
+
       
       combo3 = new JComboBox<String>();
-      combo3.addItem("1월");
-      combo3.addItem("2월");
-      combo3.addItem("3월");
-      combo3.addItem("4월");
-      combo3.addItem("5월");
-      combo3.addItem("6월");
-      combo3.addItem("7월");
-      combo3.addItem("8월");
-      combo3.addItem("9월");
-      combo3.addItem("10월");
-      combo3.addItem("11월");
-      combo3.addItem("12월");
+      combo3.addItem("2019-11월");
+      combo3.addItem("2019-12월");
+      combo3.addItem("2020-1월");
+      combo3.addItem("2020-2월");
+      combo3.addItem("2020-3월");
+      combo3.addItem("2020-4월");
+      combo3.addItem("2020-5월");
+      combo3.addItem("2020-6월");
+      combo3.addItem("2020-7월");
+      combo3.addItem("2020-8월");
+      combo3.addItem("2020-9월");
+      combo3.addItem("2020-10월");
+
       
-      jtb.add(combo1);
+      jtb.add(jn);
       jtb.add(combo2);
       jtb.add(combo3);
       
