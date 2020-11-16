@@ -244,8 +244,7 @@ class btn01Listener implements ActionListener
 	}
 }
    
-     
-   
+
    // 파일불러오기 메뉴아이템 
    class LoadActionListener implements ActionListener
    {
