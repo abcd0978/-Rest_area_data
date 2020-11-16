@@ -158,6 +158,7 @@ public class MainFrame{
       JPanel p1=new JPanel();//패널 객체 생성
       
    }
+   
    class DrawingPanel extends JPanel{
 	   int jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec;
 	   public void paint(Graphics g) {
