@@ -48,7 +48,6 @@ public class Area
 	public void setRacode(String racode) {
 		this.racode = racode;
 	}
-	
 	public String getRaname() {
 		return raname;
 	}

@@ -8,6 +8,7 @@ import javax.swing.table.TableRowSorter;
 import database.Area;
 import database.Csvtodb;
 import database.LookupAndModify;
+import javafx.scene.layout.Border;
 
 import java.awt.*;
 import java.awt.event.*; // ActionListener & ActionEvent 패키지를 위한 Import
@@ -16,13 +17,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class MainFrame
+public class MainFrame extends JFrame
 {
    
    JButton button01, button02, button03, b01, b02;
    JMenu jm01,jm02,jm03;
    JMenuBar jmb;
-   JMenuItem load,save;//불러오기,저장
+   JMenuItem load_local,save_local,save_db;//불러오기,저장
    JMenuItem modify,insert,delete;//수정,삽입,삭제,
    JMenuItem asc,desc;//오름,내림
    JToolBar jtb;
@@ -33,15 +34,12 @@ public class MainFrame
    Csvtodb ctd;//db객체 매개변수
    LookupAndModify lu;
    JFrame frame;
-   public static void main(String[] args) 
-   {   
-      //메인 메소드 실행
-      MainFrame MF = new MainFrame();
-      MF.printFunc();
-      MF.JframeFunc();
-   }
-   
-   public void printFunc() {
+   JTextField searchBar;//검색창 텍스트필드
+   DrawingPanel drawingPanel;//그래프그리는 객체
+   JPanel p1,p2;//패널
+   boolean clicked = false;
+   public void printFunc() 
+   {
       System.out.println("------Programe TEST1------");
    }
    public void JframeFunc() 
@@ -54,11 +52,13 @@ public class MainFrame
       
       jm01 = new JMenu("파일"); // Menu 생성
       
-      load = new JMenuItem("파일 불러오기"); // load메뉴아이템
-      save = new JMenuItem("파일 저장하기"); //save메뉴아이템
+      load_local = new JMenuItem("파일 로컬에서 불러오기"); // load메뉴아이템
+      save_local = new JMenuItem("파일 로컬에 저장하기"); //save메뉴아이템
+      save_db = new JMenuItem("현재 표시된내용 DB에 저장하기");
       
-      jm01.add(save);//Menu에 MenuItem추가
-      jm01.add(load);//Menu에 MenuItem추가
+      jm01.add(save_local);//Menu에 MenuItem추가
+      jm01.add(load_local);//Menu에 MenuItem추가
+      jm01.add(save_db);
       
       jmb.add(jm01); //JmenuBar에 Menu추가
       
@@ -77,7 +77,7 @@ public class MainFrame
       
       
       ImageIcon asc=new ImageIcon("src/image/오름차순.png"); //이미지 아이콘 생성
-      ImageIcon desc=new ImageIcon("src/image/내림차순.png");      
+      ImageIcon desc=new ImageIcon("src/image/내림차순.png");
       Image as = asc.getImage();
       Image des = desc.getImage();
       
@@ -91,55 +91,54 @@ public class MainFrame
       //frame.getContentPane().add(BorderLayout.NORTH, jmb);
       frame.setJMenuBar(jmb);
       
-      load.addActionListener(new LoadActionListener());
-      save.addActionListener(new SaveActionListener());
-      
+      load_local.addActionListener(new LoadActionListener());
+      save_local.addActionListener(new SaveActionListener());
+      save_db.addActionListener(new saveDB());
       jtb = new JToolBar();
-      JTextField jn = new JTextField(10);
+      searchBar = new JTextField(10);
       
       
       combo2 = new JComboBox<String>();
-      combo2.addItem("2019-11월");
-      combo2.addItem("2019-12월");
-      combo2.addItem("2020-1월");
-      combo2.addItem("2020-2월");
-      combo2.addItem("2020-3월");
-      combo2.addItem("2020-4월");
-      combo2.addItem("2020-5월");
-      combo2.addItem("2020-6월");
-      combo2.addItem("2020-7월");
-      combo2.addItem("2020-8월");
-      combo2.addItem("2020-9월");
-      combo2.addItem("2020-10월");
+      combo2.addItem("2019-11");
+      combo2.addItem("2019-12");
+      combo2.addItem("2020-01");
+      combo2.addItem("2020-02");
+      combo2.addItem("2020-03");
+      combo2.addItem("2020-04");
+      combo2.addItem("2020-05");
+      combo2.addItem("2020-06");
+      combo2.addItem("2020-07");
+      combo2.addItem("2020-08");
+      combo2.addItem("2020-09");
+      combo2.addItem("2020-10");
 
       
       combo3 = new JComboBox<String>();
-      combo3.addItem("2019-11월");
-      combo3.addItem("2019-12월");
-      combo3.addItem("2020-1월");
-      combo3.addItem("2020-2월");
-      combo3.addItem("2020-3월");
-      combo3.addItem("2020-4월");
-      combo3.addItem("2020-5월");
-      combo3.addItem("2020-6월");
-      combo3.addItem("2020-7월");
-      combo3.addItem("2020-8월");
-      combo3.addItem("2020-9월");
-      combo3.addItem("2020-10월");
+      combo3.addItem("2019-11");
+      combo3.addItem("2019-12");
+      combo3.addItem("2020-01");
+      combo3.addItem("2020-02");
+      combo3.addItem("2020-03");
+      combo3.addItem("2020-04");
+      combo3.addItem("2020-05");
+      combo3.addItem("2020-06");
+      combo3.addItem("2020-07");
+      combo3.addItem("2020-08");
+      combo3.addItem("2020-09");
+      combo3.addItem("2020-10");
 
       
-      jtb.add(jn);
+      jtb.add(searchBar);
       jtb.add(combo2);
       jtb.add(combo3);
       
       b01 = new JButton("조회/통계");
       jtb.add(b01);
-     
       frame.getContentPane().add(jtb,BorderLayout.NORTH);
       
       
       // 버튼 생성
-      button01 = new JButton("Button 01");
+      button01 = new JButton("그래프보기");
       //button02 = new JButton("Button 02");
       //button03 = new JButton("Button 03");
       
@@ -155,9 +154,9 @@ public class MainFrame
       
       // 버튼을 프레임의  Content Pane(내용틀)에 추가
       frame.getContentPane().add(BorderLayout.SOUTH, button01);
-      //frame.getContentPane().add(BorderLayout.EAST, button02);
-      //frame.getContentPane().add(BorderLayout.WEST, button03);
       
+      ////////////////////////////////////////////////////////////////////////////위에것들은 JFrame내부
+      p1 = new JPanel();
       Vector<String> header = new Vector<String>();
       header.add("기준연월");
       header.add("전체판매순위");
@@ -170,26 +169,28 @@ public class MainFrame
       Table = new JTable(model);
       Table.setRowSorter(new TableRowSorter(model));
       scroll = new JScrollPane(Table);
-      frame.add(scroll);
+      scroll.setPreferredSize(new Dimension(1000,500));
+      drawingPanel = new DrawingPanel();
+      drawingPanel.setPreferredSize(new Dimension(1000,500));
       
-      frame.setSize(750, 550); // 프레임 크기
+      p1.add(scroll);
+      frame.getContentPane().add(drawingPanel,BorderLayout.CENTER); 
+      frame.getContentPane().add(p1,BorderLayout.CENTER);
+     
       
+      //frame.pack();
+      frame.setLocationRelativeTo(null);
+      frame.setSize(1020, 640); // 프레임 크기
       frame.setVisible(true); // 프레임 화면 표시 설정
-      
-      DrawingPanel drawingPanel=new DrawingPanel(); 
-      frame.getContentPane().add(drawingPanel,BorderLayout.CENTER);
-      
-      JPanel p1=new JPanel();//패널 객체 생성
-      
+
    }
-   
-   
 class DrawingPanel extends JPanel{
 	   public void paint(Graphics g) {
 		   g.clearRect(0,0,getWidth(),getHeight());
 		   g.drawLine(50,400,450,400);
 		   
-		   for(int gb=1;gb<13;gb++) { //그래프 배경 그리기
+		   for(int gb=1;gb<13;gb++) //그래프 배경 그리기
+		   { 
 			   g.drawString(gb*5+"",20,400-30*gb);//y축 표시값
 			   g.drawLine(50, 400-30*gb, 450, 400-30*gb); //x축 라인 그리기 20씩
 		   }
@@ -197,38 +198,61 @@ class DrawingPanel extends JPanel{
 		   g.setColor(Color.red);
 	   }
 }
-//"조회" 버튼을 누르면 실행되는 메소드 우선 전체 휴게소에 대해서 구현해보았음 그러므로 시작하는 한달만 될것.
+//조회버튼 
 class LookListener implements ActionListener
 {
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
 		lu = new LookupAndModify();
-		String combo2Id = combo2.getSelectedItem().toString().split("월")[0];//시작하는 달
-		String combo3Id = combo3.getSelectedItem().toString().split("월")[0];//끝나는 달 
+		String combo2Id = combo2.getSelectedItem().toString().replace("-","");//시작하는 달
+		String combo3Id = combo3.getSelectedItem().toString().replace("-","");//끝나는 달
 		if(Integer.parseInt(combo2Id)>Integer.parseInt(combo3Id))//시작하는달이 끝나는달보다 작을수없음.
 		{
 			System.out.println("invalid content");
 			return;
-		}else if(Integer.parseInt(combo2Id)<Integer.parseInt(combo3Id)) {
-			new DrawingPanel();
 		}
 		model.setRowCount(0);//먼저 테이블을 초기화한다.
-		Vector<Area> temp = lu.lookAll(Integer.parseInt(combo2Id));//객체를 담은 벡터
-		for (Area area : temp)//각각의 객체에 대해서
+		if(searchBar.getText().equals(""))//검색창에 아무것도 입력하지 않았을때.
 		{
-			Vector<String> temp2 = new Vector<String>();//스트링타입의 벡터를 넣는다.
-			temp2.add(Integer.toString(area.getStndate()));//기준연월
-			temp2.add(Integer.toString(area.getSlranking()));//판매순위
-			temp2.add(Integer.toString(area.getSlrankingra()));//휴게소내 판매순위
-			temp2.add(area.getRacode());//휴게소 코드
-			temp2.add(area.getRaname());//휴게소명
-			temp2.add(Integer.toString(area.getStcode()));//매장코드
-			temp2.add(area.getStname());//매장명
-			model.addRow(temp2);
+			Vector<Area> temp = lu.lookAll(combo2Id);//객체를 담은 벡터
+			for (Area area : temp)//각각의 객체에 대해서
+			{
+				Vector<String> temp2 = new Vector<String>();//스트링타입의 벡터를 넣는다.
+				temp2.add(Integer.toString(area.getStndate()));//기준연월
+				temp2.add(Integer.toString(area.getSlranking()));//판매순위
+				temp2.add(Integer.toString(area.getSlrankingra()));//휴게소내 판매순위
+				temp2.add(area.getRacode());//휴게소 코드
+				temp2.add(area.getRaname());//휴게소명
+				temp2.add(Integer.toString(area.getStcode()));//매장코드
+				temp2.add(area.getStname());//매장명
+				model.addRow(temp2);
+			}
+			System.out.println(model.getRowCount());
 		}
-		System.out.println(combo2Id+" "+combo3Id);
-		System.out.println(model.getRowCount());
+		else
+		{
+			
+			System.out.println(searchBar.getText());
+			Vector<Vector<Area>> temp = lu.lookarea(searchBar.getText(),combo2Id,combo3Id);//객체벡터를 담은 벡터
+			for (int i=0;i<temp.size();i++) 
+			{
+				Vector<Area> temp2 = temp.get(i);//객체백터를 뽑아낸다.
+				for (Area area : temp2)
+				{
+					Vector<String> temp3 = new Vector<String>();//스트링타입의 벡터
+					temp3.add(Integer.toString(area.getStndate()));//기준연월
+					temp3.add(Integer.toString(area.getSlranking()));//판매순위
+					temp3.add(Integer.toString(area.getSlrankingra()));//휴게소내 판매순위
+					temp3.add(area.getRacode());//휴게소 코드
+					temp3.add(area.getRaname());//휴게소명
+					temp3.add(Integer.toString(area.getStcode()));//매장코드
+					temp3.add(area.getStname());//매장명
+					model.addRow(temp3);
+				}
+			}
+		}
+		
 	}
 }
 class btn01Listener implements ActionListener
@@ -236,11 +260,28 @@ class btn01Listener implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
-		
+		if(clicked==false)
+		{
+			clicked = true;
+			button01.setText("테이블보기");
+			frame.getContentPane().add(drawingPanel,BorderLayout.CENTER); 
+			p1.setVisible(false);
+			drawingPanel.setVisible(true);
+			drawingPanel.repaint();
+		}
+		else
+		{
+			button01.setText("그래프보기");
+			frame.getContentPane().add(p1,BorderLayout.CENTER);
+			clicked=false;
+			p1.setVisible(true);
+			drawingPanel.setVisible(false);
+		}
+
 	}
 }
-     class ascListener implements ActionListener
-     {
+class ascListener implements ActionListener
+{
 		@Override
 		public void actionPerformed(ActionEvent e) 
 		{
@@ -251,7 +292,7 @@ class btn01Listener implements ActionListener
 class LoadActionListener implements ActionListener
 {
 	@Override
-	public void actionPerformed(ActionEvent e) 
+	public void actionPerformed(ActionEvent e)
 	{
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("csv파일","csv"));
@@ -260,10 +301,9 @@ class LoadActionListener implements ActionListener
         {
         	String Path = fileChooser.getSelectedFile().getPath();//선택된파일의 경로를 스트링으로 저장
             ctd = new Csvtodb();
-            System.out.println(Path);
             try 
             {
-            	ctd.invert(Path);
+            	JOptionPane.showMessageDialog(null,ctd.invert(Path));
             } 
             catch (SQLException | IOException e1) 
             {
@@ -272,6 +312,7 @@ class LoadActionListener implements ActionListener
          }
 	}
 }
+//csv로 저장하는 리스너.
 class SaveActionListener implements ActionListener
 {
 	@Override
@@ -279,5 +320,34 @@ class SaveActionListener implements ActionListener
 	{
 		System.out.println("wait for download");
 	}
+}
+
+//데이터 삭제 리스너.
+class DeleteActionListener implements ActionListener{
+ @Override
+ public void actionPerformed(ActionEvent e) 
+ {
+ 	lu.Delete(combo2.getSelectedItem().toString().replace("-",""), Table.getValueAt(Table.getSelectedRow(), 4).toString(), Table.getValueAt(Table.getSelectedRow(), 6).toString());
+ }  
+}
+
+//데이터 수정 리스너.
+class ModifyActionListener implements ActionListener{
+ @Override
+ public void actionPerformed(ActionEvent e) 
+ {
+ 	lu.Modify(combo2.getSelectedItem().toString().replace("-",""), Table.getSelectedColumn(), Table.getValueAt(Table.getSelectedRow(), Table.getSelectedColumn()).toString(), Table.getValueAt(Table.getSelectedRow(), 3).toString(), Table.getValueAt(Table.getSelectedRow(), 5).toString());
+ }  
+}
+//현재 표시된 내용 DB에 저장하기
+class saveDB implements ActionListener
+{
+
+	@Override
+	public void actionPerformed(ActionEvent e) 
+	{
+		JOptionPane.showInputDialog("테이블명: ");
+	}
+	
 }
 }

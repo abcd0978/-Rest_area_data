@@ -22,7 +22,7 @@ public class Csvtodb
 		ct = new CreteTable();
 	}
 	/*CSV파일이있는 경로를 받아서 db에 넣어준다.*/
-    public void invert(String Location) throws SQLException, IOException
+    public String invert(String Location) throws SQLException, IOException
     {
     	/*기준연월을 받는 코드*/
     	BufferedReader lineReader2 = new BufferedReader(new FileReader(Location));//경로에있는 파일 읽음
@@ -35,8 +35,7 @@ public class Csvtodb
     	lineReader2.close();//닫기
     	if(ct.does_exist(yearmonth))//방금 구한 기준연월을 가진 테이블이 존재하는가?
     	{
-    		System.out.println("데이터가 이미 존재합니다.");
-    		return;
+    		return yearmonth+"의 데이터는 이미 존재합니다.";
     	}
     	else//처음 받는 csv파일이라면,
     	{
@@ -81,5 +80,6 @@ public class Csvtodb
     	    ps.executeBatch();
     	 }
     	System.out.println("데이터베이스 이식완료");
+    	return yearmonth+"의 데이터를 DB에 삽입하였습니다.";
     	}
 }

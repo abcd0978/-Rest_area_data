@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,24 +14,42 @@ public class LookupAndModify
 {
 	Connection con;
 	Vector<Area> areas;
-	Statement st = null;
-	ResultSet rs = null;
+	private Statement st = null;
+	private ResultSet rs = null;
+	private PreparedStatement delete = null;
+	private PreparedStatement modify = null;
 	public LookupAndModify()
 	{
 		con = DBConnection.getInstance();
 	}
-	//1~9월은 앞에 0이 붙어서 넘겨야 일일이 해주기 귀찮아서 매소드로 만듬.
-	public String getMonString(int Month)
+	//2019년과 2020년의 콤보박스 스트링을 처리할수있도록 하는 메소드
+	public ArrayList<String> TakeyearMonth(String StartyearMonth,String EndyearMonth)
 	{
-		if(Month<10)
-			return "0"+Month;
-		else
-			return Integer.toString(Month);
+		ArrayList<String> temp = new ArrayList<String>();
+		int startM = Integer.parseInt(StartyearMonth)%100;//시작하는 월을 정수로 바꾼다.
+		int endM = Integer.parseInt(EndyearMonth)%100;//끝나는월도 정수로 바꾼다.
+		int startY = Integer.parseInt(StartyearMonth)/100;//연
+		int endY = Integer.parseInt(EndyearMonth)/100;//연
+		while(endY+endM >= startY+startM)
+		{
+			if(startM<10)
+				temp.add(Integer.toString(startY)+"0"+Integer.toString(startM));
+			else
+				temp.add(Integer.toString(startY)+Integer.toString(startM));
+			if(startM==12)
+			{
+				startY++;
+				startM = 1;
+			}
+			else
+				startM++;
+		}
+		return temp;//날짜를 담은 리스트를 반환함.
 	}
-	//전체휴게소 
-	public Vector<Area> lookAll(int Month)
+	//해당 연월의 전체휴게소를 보여준다.
+	public Vector<Area> lookAll(String yearMonth)
 	{
-		String query = "SELECT * FROM table_2020"+getMonString(Month);
+		String query = "SELECT * FROM table_"+yearMonth;
 		areas = new Vector<Area>();
 		try {
 			st = con.createStatement();
@@ -47,20 +66,22 @@ public class LookupAndModify
 				String temp7 = rs.getString("stname");
 				areas.add(new Area(temp1,temp2,temp3,temp4,temp5,temp6,temp7));
 			}
-		} catch (SQLException e) {
+		} catch (SQLException e)
+		{
 			e.printStackTrace();
 		}
 		return areas;
 	}
-	//특정휴게소 휴게소 기간
-	public Vector<Vector<Area>> lookarea(String raname,int StartM,int EndM)
+	
+	//특정휴게소 휴게소 (검색)기간
+	public Vector<Vector<Area>> lookarea(String raname,String StartyearMonth,String EndyearMonth)
 	{
-		int count = EndM - StartM;
-		Vector<Vector<Area>> temp = new Vector<Vector<Area>>();//전체달
+		ArrayList<String> temp = TakeyearMonth(StartyearMonth, EndyearMonth);
+		Vector<Vector<Area>> total = new Vector<Vector<Area>>();//전체달
 		try {
-			for(int i=0;i<count;i++)
+			for (int i=0;i<temp.size();i++)
 			{
-				String query = "SELECT * FROM table_2020"+getMonString(StartM)+" WHERE raname = '"+raname+"';";
+				String query = "SELECT * FROM table_"+temp.get(i)+" WHERE raname LIKE '"+raname+"%';";
 				areas = new Vector<Area>();//특정달에 대한 휴게소 정보 
 				st = con.createStatement();
 				st.execute(query);
@@ -74,21 +95,21 @@ public class LookupAndModify
 					String temp5 = rs.getString("raname");
 					int temp6 = rs.getInt("stcode");
 					String temp7 = rs.getString("stname");
-					areas.add(new Area(temp1,temp2,temp3,temp4,temp5,temp6,temp7));
+					areas.add(new Area(temp1,temp2,temp3,temp4,temp5,temp6,temp7));//객체 저장
 				}
-				if(StartM!=EndM)
-					StartM++;
-				temp.add(areas);
+				total.add(areas);
 			}
+			System.out.println(temp);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return temp;
+		return total;
 	}
-	//특정휴게소 한달
-	public Vector<Area> lookarea(String raname, int Month)
+	
+	//특정휴게소 (검색)한달
+	public Vector<Area> lookarea(String raname, String yearMonth)
 	{
-		String query = "SELECT * FROM table_2020"+getMonString(Month)+" WHERE raname = "+raname;
+		String query = "SELECT * FROM table_"+yearMonth+" WHERE raname LIKE '"+raname+"%';";
 		areas = new Vector<Area>();
 		try {
 			st = con.createStatement();
@@ -115,30 +136,49 @@ public class LookupAndModify
 	{
 		
 	}
-	//휴게소 검색 name으로 시작하는 것을 찾는다.
-	public Vector<Area> search(int Month,String name)
+	// 삭제.
+	public void Delete(String yearMonth, String raname, String stname) 
 	{
-		String query = "SELECT * FROM table_2020"+getMonString(Month)+" WHERE raname LIKE '"+name+"%'";
-		areas = new Vector<Area>();
 		try {
-			st = con.createStatement();
-			st.execute(query);
-			rs = st.getResultSet();
-			while(rs.next())
-			{
-				int temp1 = rs.getInt("stndate");
-				int temp2 = rs.getInt("slranking");
-				int temp3 = rs.getInt("slrankingra");
-				String temp4 = rs.getString("racode");
-				String temp5 = rs.getString("raname");
-				int temp6 = rs.getInt("stcode");
-				String temp7 = rs.getString("stname");
-				areas.add(new Area(temp1,temp2,temp3,temp4,temp5,temp6,temp7));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String str = "DELETE FROM table_";
+			str = str + yearMonth;
+			delete = con.prepareStatement(str + " WHERE raname=" + "?" + " AND " + "stname=" + "?");
+			delete.setNString(1, raname); // 명령어 입력.
+			delete.setNString(2, stname); // 명령어 입력.
+			delete.executeUpdate(); // 삭제.
+		} catch(SQLException sqlException) {
+			sqlException.getStackTrace();
 		}
-		return areas;
+	}
+		// 수정.
+	public void Modify(String yearMonth, int col, String after, String racode, String stcode) 
+	{
+		try {
+			String str = "UPDATE table_";//쿼리문
+			// 맞는 열 찾기.
+			if(col == 0) {
+				str = str + yearMonth + " SET " + "stndate" + "=";
+			} else if(col == 1) {
+				str = str + yearMonth + " SET " + "slranking" + "=";
+			} else if(col == 2) {
+				str = str + yearMonth + " SET " + "slrankingra" + "=";
+			} else if(col == 3) {
+				str = str + yearMonth + " SET " + "racode" + "=";
+			} else if(col == 4) {
+				str = str + yearMonth + " SET " + "raname" + "=";
+			} else if(col == 5) {
+				str = str + yearMonth + " SET " + "stcode" + "=";
+			} else {
+				str = str + yearMonth + " SET " + "stname" + "=";
+			}
+			modify = con.prepareStatement(str + "?" + " WHERE racode=" + "?" + " AND " + "stcode=" + "?");
+			modify.setNString(1, after);
+			modify.setNString(2, racode);
+			modify.setNString(3, stcode);
+			System.out.println("명령어: " + modify);
+			modify.executeUpdate(); // 수정.
+		} catch(SQLException sqlException) {
+			sqlException.getStackTrace();
+		}
 	}
 }
