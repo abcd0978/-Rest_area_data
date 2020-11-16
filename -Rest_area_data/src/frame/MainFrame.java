@@ -1,21 +1,26 @@
 package frame;
 
-import java.awt.*;
-// ActionListener & ActionEvent 패키지를 위한 Import
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import database.Area;
 import database.Csvtodb;
 import database.LookupAndModify;
 
-public class MainFrame{
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.event.*; // ActionListener & ActionEvent 패키지를 위한 Import
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Vector;
+
+public class MainFrame
+{
    
    JButton button01, button02, button03, b01, b02;
    JMenu jm01,jm02,jm03;
@@ -23,10 +28,16 @@ public class MainFrame{
    JMenuItem load,save;//불러오기,저장
    JMenuItem modify,insert,delete;//수정,삽입,삭제,
    JMenuItem asc,desc;//오름,내림
+   JToolBar jtb;
+   JComboBox<String> combo1,combo2,combo3;
+   JTable Table;
+   JScrollPane scroll;
+   DefaultTableModel model;
    Csvtodb ctd;//db객체 매개변수
    LookupAndModify lu;
-   
-   public static void main(String[] args) {   
+   JFrame frame;
+   public static void main(String[] args) 
+   {   
       //메인 메소드 실행
       MainFrame MF = new MainFrame();
       MF.printFunc();
@@ -36,13 +47,11 @@ public class MainFrame{
    public void printFunc() {
       System.out.println("------Programe TEST1------");
    }
-   
    public void JframeFunc() 
    {
-      JFrame frame = new JFrame(); // 프레임 생성
+      frame = new JFrame(); // 프레임 생성
       
       frame.setTitle("고속도로 휴게소 매장 프로그램");
-      
       jmb = new JMenuBar(); // JMenuBar 생성
       
       
@@ -88,11 +97,11 @@ public class MainFrame{
       load.addActionListener(new LoadActionListener());
       save.addActionListener(new SaveActionListener());
       
-      JToolBar jtb = new JToolBar();
-      JComboBox combo1 = new JComboBox();
+      jtb = new JToolBar();
+      combo1 = new JComboBox<String>();
       combo1.addItem("전체 휴게소");
       
-      JComboBox combo2 = new JComboBox();
+      combo2 = new JComboBox<String>();
       combo2.addItem("1월");
       combo2.addItem("2월");
       combo2.addItem("3월");
@@ -106,7 +115,7 @@ public class MainFrame{
       combo2.addItem("11월");
       combo2.addItem("12월");
       
-      JComboBox combo3 = new JComboBox();
+      combo3 = new JComboBox<String>();
       combo3.addItem("1월");
       combo3.addItem("2월");
       combo3.addItem("3월");
@@ -124,11 +133,14 @@ public class MainFrame{
       jtb.add(combo2);
       jtb.add(combo3);
       
-      b01 = new JButton("조회/통계");
-      
+      b01 = new JButton("조회");
+      b02 = new JButton("통계");
       jtb.add(b01);
+      jtb.add(b02);
       
+     
       frame.getContentPane().add(jtb,BorderLayout.NORTH);
+      
       
       // 버튼 생성
       button01 = new JButton("Button 01");
@@ -137,6 +149,10 @@ public class MainFrame{
       
       // Button 리스너 목록에 등록
       button01.addActionListener(new btn01Listener());
+      b01.addActionListener(new LookListener());
+      this.asc.addActionListener(new ascListener());
+      
+      
       
       // 창 close 시에 프로그램 종료
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -146,63 +162,103 @@ public class MainFrame{
       //frame.getContentPane().add(BorderLayout.EAST, button02);
       //frame.getContentPane().add(BorderLayout.WEST, button03);
       
-            
-      frame.setSize(500, 550); // 프레임 크기
+      Vector<String> header = new Vector<String>();
+      header.add("기준연월");
+      header.add("전체판매순위");
+      header.add("휴게소내 판매순위");
+      header.add("휴게소 코드");
+      header.add("휴게소명");
+      header.add("매장코드");
+      header.add("매장명");
+      model = new DefaultTableModel(header,0);
+      Table = new JTable(model);
+      Table.setRowSorter(new TableRowSorter(model));
+      scroll = new JScrollPane(Table);
+      frame.add(scroll);
+      
+      frame.setSize(750, 550); // 프레임 크기
       
       frame.setVisible(true); // 프레임 화면 표시 설정
-      
    }
-   
+//"조회" 버튼을 누르면 실행되는 메소드 우선 전체 휴게소에 대해서 구현해보았음 그러므로 시작하는 한달만 될것.
+class LookListener implements ActionListener
+{
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		lu = new LookupAndModify();
+		String combo2Id = combo2.getSelectedItem().toString().split("월")[0];//시작하는 달
+		String combo3Id = combo3.getSelectedItem().toString().split("월")[0];//끝나는 달 
+		if(Integer.parseInt(combo2Id)>Integer.parseInt(combo3Id))//시작하는달이 끝나는달보다 작을수없음.
+		{
+			System.out.println("invalid content");
+			return;
+		}
+		model.setRowCount(0);//먼저 테이블을 초기화한다.
+		Vector<Area> temp = lu.lookAll(Integer.parseInt(combo2Id));//객체를 담은 벡터
+		for (Area area : temp)//각각의 객체에 대해서
+		{
+			Vector<String> temp2 = new Vector<String>();//스트링타입의 벡터를 넣는다.
+			temp2.add(Integer.toString(area.getStndate()));//기준연월
+			temp2.add(Integer.toString(area.getSlranking()));//판매순위
+			temp2.add(Integer.toString(area.getSlrankingra()));//휴게소내 판매순위
+			temp2.add(area.getRacode());//휴게소 코드
+			temp2.add(area.getRaname());//휴게소명
+			temp2.add(Integer.toString(area.getStcode()));//매장코드
+			temp2.add(area.getStname());//매장명
+			model.addRow(temp2);
+		}
+		System.out.println(combo2Id+" "+combo3Id);
+		System.out.println(model.getRowCount());
+	}
+}
 class btn01Listener implements ActionListener
 {
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
-		lu = new LookupAndModify();
-		ArrayList<ArrayList<Area>> temp = lu.lookarea("평택휴게소",9,10);
-		for(int i=0;i<=1;i++)
-    	{
-			ArrayList<Area> temp1 = temp.get(i);
-			System.out.println((9+i)+"월달");
-    		for (Area area : temp1) 
-    		{
-    			System.out.println("가게이름:"+area.getStname()+"  가게 전체 순위:"+area.getSlranking());
-    		}
-    	}
+		
 	}
 }
-   
-
-   // 파일불러오기 메뉴아이템 
-   class LoadActionListener implements ActionListener
-   {
-      @Override
-      public void actionPerformed(ActionEvent e) 
-      {
-         button03.setText("클릭 이벤트");
-         JFileChooser fileChooser = new JFileChooser();
-         fileChooser.setFileFilter(new FileNameExtensionFilter("csv파일","csv"));
-         int returnval = fileChooser.showOpenDialog(null);//열기옵션으로 filechooser를 연뒤에 행동에 따라 return 값이 나온다.
-         if(returnval == JFileChooser.APPROVE_OPTION)//yes,ok,열기 등 확인버튼을 누르면 실행되는것
-         {
-             String Path = fileChooser.getSelectedFile().getPath();//선택된파일의 경로를 스트링으로 저장
-             ctd = new Csvtodb();
-             System.out.println(Path);
-             try {
-    			ctd.invert(Path);
-    		} catch (SQLException | IOException e1) {
+     class ascListener implements ActionListener
+     {
+		@Override
+		public void actionPerformed(ActionEvent e) 
+		{
+			//model.getDataVector().sort();
+		}
+     }
+// 파일불러오기 메뉴아이템 
+class LoadActionListener implements ActionListener
+{
+	@Override
+	public void actionPerformed(ActionEvent e) 
+	{
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("csv파일","csv"));
+        int returnval = fileChooser.showOpenDialog(null);//열기옵션으로 filechooser를 연뒤에 행동에 따라 return 값이 나온다.
+        if(returnval == JFileChooser.APPROVE_OPTION)//yes,ok,열기 등 확인버튼을 누르면 실행되는것
+        {
+        	String Path = fileChooser.getSelectedFile().getPath();//선택된파일의 경로를 스트링으로 저장
+            ctd = new Csvtodb();
+            System.out.println(Path);
+            try 
+            {
+            	ctd.invert(Path);
+            } 
+            catch (SQLException | IOException e1) 
+            {
     			e1.printStackTrace();
     		}
          }
-      }
-
-   }
-   class SaveActionListener implements ActionListener
-   {
+	}
+}
+class SaveActionListener implements ActionListener
+{
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
 		System.out.println("wait for download");
 	}
-   }
+}
 }
