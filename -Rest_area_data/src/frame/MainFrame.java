@@ -174,7 +174,7 @@ public class MainFrame
       
       frame.setVisible(true); // 프레임 화면 표시 설정
       
-      DrawingPanel drawingPanel=new DrawingPanel(); //
+      DrawingPanel drawingPanel=new DrawingPanel(); 
       frame.getContentPane().add(drawingPanel,BorderLayout.CENTER);
       
       JPanel p1=new JPanel();//패널 객체 생성
@@ -183,54 +183,16 @@ public class MainFrame
    
    
 class DrawingPanel extends JPanel{
-	   int jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec;
 	   public void paint(Graphics g) {
 		   g.clearRect(0,0,getWidth(),getHeight());
 		   g.drawLine(50,400,450,400);
 		   
 		   for(int gb=1;gb<13;gb++) { //그래프 배경 그리기
-			   g.drawString(gb*10+"",20,400-30*gb);//y축 표시값
+			   g.drawString(gb*5+"",20,400-30*gb);//y축 표시값
 			   g.drawLine(50, 400-30*gb, 450, 400-30*gb); //x축 라인 그리기 20씩
 		   }
 		   g.drawLine(50, 20, 50, 400);
-		   g.drawString("1월", 70, 420);
-		   g.drawString("2월", 100, 420);
-		   g.drawString("3월", 130, 420);
-		   g.drawString("4월", 160, 420);
-		   g.drawString("5월", 190, 420);
-		   g.drawString("6월", 220, 420);
-		   g.drawString("7월", 250, 420);
-		   g.drawString("8월", 280, 420);
-		   g.drawString("9월", 310, 420);
-		   g.drawString("10월", 340, 420);
-		   g.drawString("11월", 370, 420);
-		   g.drawString("12월", 400, 420);
 		   g.setColor(Color.red);
-		   
-		   if(jan>0)
-			   g.fillRect(80, 450-jan*2, 10, jan*2);
-		   if(feb>0)
-			   g.fillRect(110, 450-feb*2, 10, feb*2);
-		   if(mar>0)
-			   g.fillRect(140, 450-mar*2, 10, mar*2);
-		   if(apr>0)
-			   g.fillRect(170, 450-apr*2, 10, apr*2);
-		   if(may>0)
-			   g.fillRect(200, 450-may*2, 10, may*2);
-		   if(jun>0)
-			   g.fillRect(230, 450-jun*2, 10, jun*2);
-		   if(jul>0)
-			   g.fillRect(260, 450-jul*2, 10, jul*2);
-		   if(aug>0)
-			   g.fillRect(290, 450-aug*2, 10, aug*2);
-		   if(sep>0)
-			   g.fillRect(320, 450-sep*2, 10, sep*2);
-		   if(oct>0)
-			   g.fillRect(350, 450-oct*2, 10, oct*2);
-		   if(nov>0)
-			   g.fillRect(380, 450-nov*2, 10, nov*2);
-		   if(dec>0)
-			   g.fillRect(410, 450-dec*2, 10, dec*2);
 	   }
 }
 //"조회" 버튼을 누르면 실행되는 메소드 우선 전체 휴게소에 대해서 구현해보았음 그러므로 시작하는 한달만 될것.
