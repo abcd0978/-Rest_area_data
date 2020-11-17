@@ -8,7 +8,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+
+import com.mysql.cj.protocol.Resultset;
+import com.mysql.cj.xdevapi.Result;
 /*csv파일의 경로를 받아서 db에 저장해주는 클래스*/
 public class Csvtodb 
 {
@@ -20,6 +25,23 @@ public class Csvtodb
 	{
 		con = DBConnection.getInstance();
 		ct = new CreteTable();
+	}
+	public String download(String yearMonth,String Name)
+	{
+		String query = "SELECT * FROM table_"+yearMonth+" INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/"+Name+".csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n'";
+		
+		try 
+		{
+			ps = con.prepareStatement(query);
+			System.out.println(ps.toString());
+			ps.execute();
+		} catch (SQLException e) 
+		{
+			e.printStackTrace();
+			return "같은이름의 파일이 존재하거나 파일의 이름이 한글입니다.";
+		}
+		return yearMonth+"의 데이터를 다운로드 했습니다.\n"
+				+ "경로:C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/";
 	}
 	/*CSV파일이있는 경로를 받아서 db에 넣어준다.*/
     public String invert(String Location) throws SQLException, IOException

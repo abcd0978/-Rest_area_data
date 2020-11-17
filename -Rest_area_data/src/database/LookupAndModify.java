@@ -13,7 +13,6 @@ import com.mysql.cj.protocol.Resultset;
 public class LookupAndModify 
 {
 	Connection con;
-	Vector<Area> areas;
 	private Statement st = null;
 	private ResultSet rs = null;
 	private PreparedStatement delete = null;
@@ -22,7 +21,7 @@ public class LookupAndModify
 	{
 		con = DBConnection.getInstance();
 	}
-	//2019년과 2020년의 콤보박스 스트링을 처리할수있도록 하는 메소드
+	//다른년도와 다른월 의 콤보박스 스트링을 처리할수있도록 하는 메소드
 	public ArrayList<String> TakeyearMonth(String StartyearMonth,String EndyearMonth)
 	{
 		ArrayList<String> temp = new ArrayList<String>();
@@ -46,34 +45,40 @@ public class LookupAndModify
 		}
 		return temp;//날짜를 담은 리스트를 반환함.
 	}
-	//해당 연월의 전체휴게소를 보여준다.
-	public Vector<Area> lookAll(String yearMonth)
+	//전체휴게소
+	public Vector<Vector<Area>> lookAll(String StartyearMonth,String EndyearMonth)
 	{
-		String query = "SELECT * FROM table_"+yearMonth;
-		areas = new Vector<Area>();
+		ArrayList<String> temp = TakeyearMonth(StartyearMonth, EndyearMonth);//첫달과 끝달을 받아 연속되는 리스트로 반환
+		Vector<Vector<Area>> total = new Vector<Vector<Area>>();//전체달
 		try {
-			st = con.createStatement();
-			st.execute(query);
-			rs = st.getResultSet();
-			while(rs.next())
+			for(int i=0;i<temp.size();i++)
 			{
-				int temp1 = rs.getInt("stndate");
-				int temp2 = rs.getInt("slranking");
-				int temp3 = rs.getInt("slrankingra");
-				String temp4 = rs.getString("racode");
-				String temp5 = rs.getString("raname");
-				int temp6 = rs.getInt("stcode");
-				String temp7 = rs.getString("stname");
-				areas.add(new Area(temp1,temp2,temp3,temp4,temp5,temp6,temp7));
+				String query = "select * from table_"+temp.get(i);
+				Vector<Area> areas = new Vector<Area>();
+				st = con.createStatement();
+				st.execute(query);
+				rs = st.getResultSet();
+				while(rs.next())
+				{
+					int temp1 = rs.getInt("stndate");
+					int temp2 = rs.getInt("slranking");
+					int temp3 = rs.getInt("slrankingra");
+					String temp4 = rs.getString("racode");
+					String temp5 = rs.getString("raname");
+					int temp6 = rs.getInt("stcode");
+					String temp7 = rs.getString("stname");
+					areas.add(new Area(temp1,temp2,temp3,temp4,temp5,temp6,temp7));
+				}
+				total.add(areas);
 			}
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
-		return areas;
+		return total;
 	}
 	
-	//특정휴게소 휴게소 (검색)기간
+	//특정휴게소 휴게소 (검색)
 	public Vector<Vector<Area>> lookarea(String raname,String StartyearMonth,String EndyearMonth)
 	{
 		ArrayList<String> temp = TakeyearMonth(StartyearMonth, EndyearMonth);
@@ -82,7 +87,7 @@ public class LookupAndModify
 			for (int i=0;i<temp.size();i++)
 			{
 				String query = "SELECT * FROM table_"+temp.get(i)+" WHERE raname LIKE '"+raname+"%';";
-				areas = new Vector<Area>();//특정달에 대한 휴게소 정보 
+				Vector<Area> areas = new Vector<Area>();//특정달에 대한 휴게소 정보 
 				st = con.createStatement();
 				st.execute(query);
 				rs = st.getResultSet();
@@ -104,32 +109,6 @@ public class LookupAndModify
 			e.printStackTrace();
 		}
 		return total;
-	}
-	
-	//특정휴게소 (검색)한달
-	public Vector<Area> lookarea(String raname, String yearMonth)
-	{
-		String query = "SELECT * FROM table_"+yearMonth+" WHERE raname LIKE '"+raname+"%';";
-		areas = new Vector<Area>();
-		try {
-			st = con.createStatement();
-			st.execute(query);
-			rs = st.getResultSet();
-			while(rs.next())
-			{
-				int temp1 = rs.getInt("stndate");
-				int temp2 = rs.getInt("slranking");
-				int temp3 = rs.getInt("slrankingra");
-				String temp4 = rs.getString("racode");
-				String temp5 = rs.getString("raname");
-				int temp6 = rs.getInt("stcode");
-				String temp7 = rs.getString("stname");
-				areas.add(new Area(temp1,temp2,temp3,temp4,temp5,temp6,temp7));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return areas;
 	}
 	//삽입
 	public void insert(int stndate,int slranking,int slrankingra,String racode,String raname,int stcode,String stname)
