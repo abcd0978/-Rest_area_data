@@ -39,6 +39,7 @@ public class MainFrame extends JFrame
    DrawingPanel drawingPanel;//그래프그리는 객체
    JPanel p1,p2;//패널
    boolean clicked = false;
+   ArrayList<Integer> list = new ArrayList<>();
    public void printFunc() 
    {
       System.out.println("------Programe TEST1------");
@@ -94,6 +95,7 @@ public class MainFrame extends JFrame
       save_local.addActionListener(new SaveActionListener());
       delete.addActionListener(new DeleteActionListener());
       modify.addActionListener(new ModifyActionListener());
+      insert.addActionListener(new InsertActionListener());
       this.asc.addActionListener(new ascAction());
       jtb = new JToolBar();
       searchBar = new JTextField(10);
@@ -185,23 +187,90 @@ public class MainFrame extends JFrame
       frame.setLocationRelativeTo(null);
       frame.setSize(1020, 640); // 프레임 크기
       frame.setVisible(true); // 프레임 화면 표시 설정
-
    }
    
    
 class DrawingPanel extends JPanel{
-	   public void paint(Graphics g) {
-		   g.clearRect(0,0,getWidth(),getHeight());
-		   g.drawLine(50,400,450,400);
+	public void paint(Graphics g) {
+		g.clearRect(0,0,getWidth(),getHeight()); // 초기화.
+		g.drawLine(50,410,750,410); // x축 선.
 		   
-		   for(int gb=1;gb<13;gb++) //그래프 배경 그리기
-		   { 
-			   g.drawString(gb*5+"",20,400-30*gb);//y축 표시값
-			   g.drawLine(50, 400-30*gb, 450, 400-30*gb); //x축 라인 그리기 20씩
-		   }
-		   g.drawLine(50, 20, 50, 400);
-		   g.setColor(Color.red);
-	   }
+		for(int gb=1;gb<12;gb++) //그래프 배경 그리기
+		{ 
+			g.drawString(gb*100+"",20,410-30*gb);//y축 표시값
+			g.drawLine(50, 410-30*gb, 750, 410-30*gb); //x축 라인 그리기 20씩
+		}
+		g.drawLine(50, 20, 50, 410); // y축 선.
+		
+		int x = 60; // x축 간격1.
+		int y = 80; // x축 간격2.
+		g.drawString((String) Table.getValueAt(list.get(0), 4), 380, 30); // 매장명.
+		for(int i=0; i < list.size(); i++) {
+			// 차트 그리기.
+			if( Table.getValueAt((int) list.get(i), 0).equals( Table.getValueAt((int) list.get(0), 0))) { // 년도가 같은 경우.
+				g.setColor(Color.cyan); // 막대 색.
+				
+				if((int) Table.getValueAt(list.get(i), 1)*3/10 <= 360) { // 차트에 표시되는 최대크기가 안넘는 경우.
+					g.fillRect(x, 410 - (int) Table.getValueAt(list.get(i), 1)*3/10, 20, (int) Table.getValueAt(list.get(i), 1)*3/10); // 전체 순위.
+					
+					if(Table.getValueAt((int) list.get(i), 1).toString().length() < 4) { // 전체 순위가 3자리 수인 경우.
+						g.drawString(Table.getValueAt(list.get(i), 1).toString(), x, 405 - (int) Table.getValueAt(list.get(i), 1)*3/10); // 막대위에 전체 순위 표시.
+					} else { // 전체 순위가 4자리 수인 경우.
+						g.drawString(Table.getValueAt(list.get(i), 1).toString(), x-7, 405 - (int) Table.getValueAt(list.get(i), 1)*3/10); // 막대위에 전체 순위 표시.
+					}
+					g.fillRect(140, 450, 10, 10); // 전체순위 막대그래프 색 표시.
+					
+				} else { // 넘는 경우.
+					g.fillRect(x, 50, 20, 360); // 전체 순위.
+					g.drawString(Table.getValueAt(list.get(i), 1).toString(), x-7, 45); // 막대위에 전체 순위 표시.
+					g.fillRect(140, 450, 10, 10); // 전체순위 막대그래프 색 표시.
+					g.setColor(Color.black); // 선색.
+					g.drawLine(x-4, 50, x+24, 50); // 막대위에 선.
+				}
+				
+				g.setColor(Color.black); // 글자색.
+				g.drawString(Table.getValueAt(list.get(i), 0).toString(), 165, 460); // 년도.
+				g.drawString(Table.getColumnName(1), 160, 475); // 열 이름.
+				g.setColor(Color.gray); // 막대색.
+				g.fillRect(x+45, 410 - (int) Table.getValueAt(list.get(i), 2)*50, 20, (int) Table.getValueAt(list.get(i), 2)*50); // 매장 내 순위.
+				g.drawString(Table.getValueAt(list.get(i), 2).toString() + "등", x+46, 405 - (int) Table.getValueAt(list.get(i), 2)*50); // 막대위에 매장 내 순위 표시.
+				g.fillRect(400, 450, 10, 10); // 매장 내 순위 막대그래프 색 표시.
+				g.drawString(Table.getValueAt(list.get(i), 0).toString(), 420, 460); // 년도.
+				g.drawString(Table.getColumnName(2), 415, 475); // 열 이름.
+				x += 140;
+			} else { // 년도가 다른 경우.
+				g.setColor(Color.red); // 막대색.
+				
+				if((int) Table.getValueAt(list.get(i), 1)*3/10 <= 360) { // 차트에 표시되는 최대크기가 안넘는 경우.
+					g.fillRect(y, 410 - (int) Table.getValueAt(list.get(i), 1)*3/10, 20, (int) Table.getValueAt(list.get(i), 1)*3/10); // 전체 순위.
+					g.drawString(Table.getValueAt(list.get(i), 1).toString(), y, 405 - (int) Table.getValueAt(list.get(i), 1)*3/10); // 막대위에 전체 순위 표시.
+					g.fillRect(240, 450, 10, 10); // 전체순위 막대그래프 색 표시.
+				} else { //이 넘는 경우.
+					g.fillRect(y, 50, 20, 360); // 전체 순위.
+					g.drawString(Table.getValueAt(list.get(i), 1).toString(), y, 45); // 막대위에 전체 순위 표시.
+					g.fillRect(240, 450, 10, 10); // 전체순위 막대그래프 색 표시.
+					g.setColor(Color.black); // 선색.
+					g.drawLine(y-4, 50, y+24, 50); // 막대위에 선.
+				}
+				g.setColor(Color.black); // 글자색.
+				g.drawString(Table.getValueAt(list.get(i), 0).toString(), 260, 460); // 년도.
+				g.drawString(Table.getColumnName(1), 255, 475); // 열 이름.
+				g.setColor(Color.lightGray); // 막대색.
+				g.fillRect(y+45, 410 - (int) Table.getValueAt(list.get(i), 2)*50, 20, (int) Table.getValueAt(list.get(i), 2)*50); // 매장 내 순위.
+				g.drawString(Table.getValueAt(list.get(i), 2).toString() + "등", y+46, 405 - (int) Table.getValueAt(list.get(i), 2)*50); // 막대위에 매장 내 순위 표시.
+				g.fillRect(530, 450, 10, 10); // 매장 내 순위 막대그래프 색 표시.
+				g.drawString(Table.getValueAt(list.get(i), 0).toString(), 550, 460); // 년도.
+				g.drawString(Table.getColumnName(2), 545, 475); // 열 이름.
+				y += 140;
+			}
+			
+			// 매장명 넣기.
+			if(i < list.size() / 2) {
+				g.setColor(Color.black);
+				g.drawString(Table.getValueAt(list.get(i), 6).toString(), x-140, 430);
+			}
+		}
+	}
 }
 
 
@@ -279,6 +348,12 @@ class btn01Listener implements ActionListener
 					frame.getContentPane().add(drawingPanel,BorderLayout.CENTER); 
 					p1.setVisible(false);
 					drawingPanel.setVisible(true);
+					list.clear(); // 리스트 초기화.
+					for(int i=0; i < Table.getRowCount(); i++) {
+						if(Table.getValueAt(i,4).equals(Table.getValueAt(Table.getSelectedRow(),4))) {
+							list.add(i); // 선택한 열을 리스트에 저장.
+						}
+					}
 					drawingPanel.repaint();	
 				}
 			}
@@ -397,6 +472,7 @@ class ModifyActionListener implements ActionListener{
 	{
 		lu.Modify(combo2.getSelectedItem().toString().replace("-",""), Table.getSelectedColumn(), Table.getValueAt(Table.getSelectedRow(), Table.getSelectedColumn()).toString(), Table.getValueAt(Table.getSelectedRow(), 3).toString(), Table.getValueAt(Table.getSelectedRow(), 5).toString());
 	 	JOptionPane.showMessageDialog(null,Table.getValueAt(Table.getSelectedRow(), Table.getSelectedColumn()).toString()+" 수정되었습니다.");
+		System.out.println(Table.getValueAt(Table.getSelectedRow(), 3).toString()+"  "+Table.getValueAt(Table.getSelectedRow(), 5).toString());
 	}
  }  
 }
@@ -409,5 +485,126 @@ class ascAction implements ActionListener
 		Table.getRowSorter().toggleSortOrder(3);
 	}
 }
+////////////////////////////////////삽입버튼 누르면 나오는 다이얼로그 클래스
+public class MyDialog extends JDialog
+{
+	JLabel yearMonth;
+	JTextField yearMonth_textField;
+	JLabel slranking;
+	JTextField slranking_textField;
+	JLabel slrankingra;
+	JTextField slrankingra_textField;
+	JLabel racode;
+	JTextField racode_textField;
+	JLabel raname;
+	JTextField raname_textField;
+	JLabel stcode;
+	JTextField stcode_textField;
+	JLabel stname;
+	JTextField stname_textField;
+	JButton save;
+	public void init()
+	{
+		getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 20, 5));
+		yearMonth = new JLabel("기준연월 입력: ");
+		yearMonth_textField = new JTextField(10);
+		slranking = new JLabel("전체 순위 입력(정수): ");
+		slranking_textField = new JTextField(10);
+		slrankingra = new JLabel("휴게소내 판매 순위 입력(정수): ");
+		slrankingra_textField = new JTextField(10);
+		racode = new JLabel("휴게소 코드 입력: ");
+		racode_textField = new JTextField(10);
+		raname = new JLabel("휴게소 이름 입력: ");
+		raname_textField = new JTextField(10);
+		stcode = new JLabel("매장코드 입력(정수): ");
+		stcode_textField = new JTextField(10);
+		stname = new JLabel("매장 이름 입력: ");
+		stname_textField = new JTextField(10);
+		save = new JButton("저장");
+		//생성
+		add(yearMonth);
+		add(yearMonth_textField);
+		add(slranking);
+		add(slranking_textField);
+		add(slrankingra);
+		add(slrankingra_textField);
+		add(racode);
+		add(racode_textField);
+		add(raname);
+		add(raname_textField);
+		add(stcode);
+		add(stcode_textField);
+		add(stname);
+		add(stname_textField);
+		add(save);
+		//추가
 
+		save.addActionListener(new save());
+	}
+	public int getYearmonth()
+	{
+		return Integer.parseInt(yearMonth_textField.getText());
+	}
+	public int getSlranking()
+	{
+		return Integer.parseInt(slranking_textField.getText());
+	}
+	public int getSlrankingra()
+	{
+		return Integer.parseInt(slrankingra_textField.getText());
+	}
+	public String getRacode()
+	{
+		return racode_textField.getText();
+	}
+	public String getRaname()
+	{
+		return raname_textField.getText();
+	}
+	public int getStcode()
+	{
+		return Integer.parseInt(stcode_textField.getText());
+	}
+	public String getStname()
+	{
+		return stname_textField.getText();
+	}
+	class save implements ActionListener
+	{
+		private LookupAndModify lu;
+		@Override
+		public void actionPerformed(ActionEvent e) 
+		{
+			lu = new LookupAndModify();
+			try 
+			{
+				JOptionPane.showMessageDialog(null,lu.insert(getYearmonth(), getSlranking(), getSlrankingra(), getRacode(), getRaname(), getStcode(), getStname()));
+			}
+			catch(NullPointerException | NumberFormatException e2)
+			{
+				JOptionPane.showMessageDialog(null,"입력을 확인 해주세요","오류",JOptionPane.ERROR_MESSAGE);
+				e2.printStackTrace();
+			} catch (HeadlessException e1) {
+				e1.printStackTrace();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+}
+///////////////////////////////////////삽입 버튼 누르면 뜨는 다이얼로그 클래스
+class InsertActionListener implements ActionListener
+{
+	@Override
+	public void actionPerformed(ActionEvent e) 
+	{
+		 MyDialog dia = new MyDialog();//새로운 팝업창을 뜨게해서 그곳에 데이터를 삽입할수있게한다.
+		 dia.setLocationRelativeTo(frame);
+		 dia.setTitle("삽입");
+		 dia.setSize(200,470);
+		 dia.setResizable(true);
+		 dia.init();
+		 dia.setVisible(true);
+	}	
+}
 }

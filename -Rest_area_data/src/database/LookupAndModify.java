@@ -17,9 +17,12 @@ public class LookupAndModify
 	private ResultSet rs = null;
 	private PreparedStatement delete = null;
 	private PreparedStatement modify = null;
+	private PreparedStatement insert = null;
+	CreteTable ct;
 	public LookupAndModify()
 	{
 		con = DBConnection.getInstance();
+		ct = new CreteTable();
 	}
 	//다른년도와 다른월 의 콤보박스 스트링을 처리할수있도록 하는 메소드
 	public ArrayList<String> TakeyearMonth(String StartyearMonth,String EndyearMonth)
@@ -111,9 +114,26 @@ public class LookupAndModify
 		return total;
 	}
 	//삽입
-	public void insert(int stndate,int slranking,int slrankingra,String racode,String raname,int stcode,String stname)
+	public String insert(int stndate,int slranking,int slrankingra,String racode,String raname,int stcode,String stname) throws SQLException
 	{
-		
+		if(ct.does_exist(Integer.toString(stndate)))
+		{
+			String query = "INSERT INTO table_"+stndate+" (stndate, slranking, slrankingra, racode, raname, stcode, stname) VALUE(?, ?, ?, ?, ?, ?, ?)";
+			insert = con.prepareStatement(query);
+			insert.setInt(1, stndate);
+			insert.setInt(2, slranking);
+			insert.setInt(3, slrankingra);
+			insert.setString(4, racode);
+			insert.setString(5, raname);
+			insert.setInt(6, stcode);
+			insert.setString(7, stname);
+			insert.execute();
+			return "데이터가 삽입되었습니다.";
+		}
+		else
+		{
+			return "오류: 입력한 연월의 테이블이 존재하지 않습니다.";
+		}
 	}
 	// 삭제.
 	public void Delete(String yearMonth, String raname, String stname) 

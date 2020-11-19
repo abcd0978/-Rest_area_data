@@ -29,13 +29,12 @@ public class Csvtodb
 	public String download(String yearMonth,String Name)
 	{
 		String query = "SELECT * FROM table_"+yearMonth+" INTO OUTFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/"+Name+".csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\\n'";
-		
 		try 
 		{
 			ps = con.prepareStatement(query);
 			System.out.println(ps.toString());
 			ps.execute();
-		} catch (SQLException e) 
+		} catch (SQLException e)
 		{
 			e.printStackTrace();
 			return "같은이름의 파일이 존재하거나 파일의 이름이 한글입니다.";
