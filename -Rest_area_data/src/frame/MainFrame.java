@@ -21,14 +21,13 @@ import java.util.Vector;
 public class MainFrame extends JFrame
 {
    
-   JButton button01, button02, button03, b01, b02;
-   JMenu jm01,jm02,jm03;
+   JButton b01, b02;
+   JMenu jm01,jm02;
    JMenuBar jmb;
    JMenuItem load_local,save_local;//불러오기,저장
-   JMenuItem modify,insert,delete;//수정,삽입,삭제,
-   JMenuItem asc,desc;//오름,내림
+   JMenuItem modify,insert,delete;//수정,삽입,삭제
    JToolBar jtb;
-   JComboBox<String> combo1,combo2,combo3;
+   JComboBox<String> combo2,combo3;
    JTable Table;
    JScrollPane scroll;
    DefaultTableModel model;
@@ -74,21 +73,6 @@ public class MainFrame extends JFrame
       jm02.add(delete);
       jmb.add(jm02); //JmenuBar에 Menu추가
       
-      
-      
-      ImageIcon asc=new ImageIcon("src/image/오름차순.png"); //이미지 아이콘 생성
-      ImageIcon desc=new ImageIcon("src/image/내림차순.png");
-      Image as = asc.getImage();
-      Image des = desc.getImage();
-      
-      jm03=new JMenu("정렬"); //Menu 생성
-      this.asc = new JMenuItem(asc); //Item 생성
-      this.desc = new JMenuItem(desc);
-      jm03.add(this.asc);
-      jm03.add(this.desc);
-      jmb.add(jm03); //JmenuBar에 Menu Item 추가
-      
-      //frame.getContentPane().add(BorderLayout.NORTH, jmb);
       frame.setJMenuBar(jmb);
       
       load_local.addActionListener(new LoadActionListener());
@@ -96,7 +80,6 @@ public class MainFrame extends JFrame
       delete.addActionListener(new DeleteActionListener());
       modify.addActionListener(new ModifyActionListener());
       insert.addActionListener(new InsertActionListener());
-      this.asc.addActionListener(new ascAction());
       jtb = new JToolBar();
       searchBar = new JTextField(10);
       
@@ -141,12 +124,10 @@ public class MainFrame extends JFrame
       
       
       // 버튼 생성
-      button01 = new JButton("그래프보기");
-      //button02 = new JButton("Button 02");
-      //button03 = new JButton("Button 03");
+      b02 = new JButton("그래프보기");
       
       // Button 리스너 목록에 등록
-      button01.addActionListener(new btn01Listener());
+      b02.addActionListener(new btn01Listener());
       b01.addActionListener(new LookListener());
       
       
@@ -155,7 +136,7 @@ public class MainFrame extends JFrame
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       
       // 버튼을 프레임의  Content Pane(내용틀)에 추가
-      frame.getContentPane().add(BorderLayout.SOUTH, button01);
+      jtb.add(b02);
       
       ////////////////////////////////////////////////////////////////////////////위에것들은 JFrame내부
       p1 = new JPanel();
@@ -185,7 +166,7 @@ public class MainFrame extends JFrame
       
       //frame.pack();
       frame.setLocationRelativeTo(null);
-      frame.setSize(1020, 640); // 프레임 크기
+      frame.setSize(1020, 600); // 프레임 크기
       frame.setVisible(true); // 프레임 화면 표시 설정
    }
    
@@ -344,7 +325,7 @@ class btn01Listener implements ActionListener
 				if(result == JOptionPane.YES_OPTION)//예를 선택한경우
 				{
 					clicked = true;
-					button01.setText("테이블보기");
+					b02.setText("테이블보기");
 					frame.getContentPane().add(drawingPanel,BorderLayout.CENTER); 
 					p1.setVisible(false);
 					drawingPanel.setVisible(true);
@@ -360,7 +341,7 @@ class btn01Listener implements ActionListener
 		}
 		else
 		{
-			button01.setText("그래프보기");
+			b02.setText("그래프보기");
 			frame.getContentPane().add(p1,BorderLayout.CENTER);
 			clicked=false;
 			p1.setVisible(true);
@@ -475,15 +456,6 @@ class ModifyActionListener implements ActionListener{
 		System.out.println(Table.getValueAt(Table.getSelectedRow(), 3).toString()+"  "+Table.getValueAt(Table.getSelectedRow(), 5).toString());
 	}
  }  
-}
-class ascAction implements ActionListener
-{
-	@Override
-	public void actionPerformed(ActionEvent e) 
-	{
-		Table.getRowSorter().toggleSortOrder(3);
-		Table.getRowSorter().toggleSortOrder(3);
-	}
 }
 ////////////////////////////////////삽입버튼 누르면 나오는 다이얼로그 클래스
 public class MyDialog extends JDialog
