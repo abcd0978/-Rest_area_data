@@ -68,7 +68,7 @@ public class Csvtodb
     	    String lineText = null;//줄
     	    
     	    int count = 0;
-    	 
+    	    
     	    lineReader.readLine(); // skip header line
     	 
     	    while ((lineText = lineReader.readLine()) != null)
