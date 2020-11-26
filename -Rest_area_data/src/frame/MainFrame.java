@@ -188,7 +188,7 @@ public class MainFrame extends JFrame
       
       //frame.pack();
       frame.setLocationRelativeTo(null);
-      frame.setSize(1020, 650); // 프레임 크기
+      frame.setSize(1300, 650); // 프레임 크기
       //frame.setResizable(false);
       frame.setVisible(true); // 프레임 화면 표시 설정
    }
@@ -197,12 +197,12 @@ public class MainFrame extends JFrame
 class DrawingPanel extends JPanel{
 	public void paint(Graphics g) {
 		g.clearRect(0,0,getWidth(),getHeight()); // 초기화.
-		g.drawLine(50,410,950,410); // x축 선.
+		g.drawLine(50,410,1200,410); // x축 선.
 		   
 		for(int gb=1;gb<12;gb++) //그래프 배경 그리기
 		{ 
 			g.drawString(gb*100+"",20,410-30*gb);//y축 표시값
-			g.drawLine(50, 410-30*gb, 1000, 410-30*gb); //x축 라인 그리기 20씩
+			g.drawLine(50, 410-30*gb, 1200, 410-30*gb); //x축 라인 그리기 20씩
 		}
 		g.drawLine(50, 20, 50, 410); // y축 선.
 		
@@ -381,26 +381,26 @@ class DrawingPanel extends JPanel{
 					int x1 = 680 +30*(monList.size()-2);
 					if((int) Table.getValueAt(list.get(over), 1)*3/10 <= 360) { // 차트에 표시되는 최대크기가 안넘는 경우.
 						g.setColor(col); // 막대 색상적용.
-						g.fillRect(x + x1+15*(monList.size()-2)+count*80, 410 - (int) Table.getValueAt(list.get(over), 1)*3/10, 15, (int) Table.getValueAt(list.get(over), 1)*3/10); // 전체 순위.
+						g.fillRect(x + x1+15*(monList.size()-2)+count*100, 410 - (int) Table.getValueAt(list.get(over), 1)*3/10, 15, (int) Table.getValueAt(list.get(over), 1)*3/10); // 전체 순위.
 						
 						if(Table.getValueAt((int) list.get(over), 1).toString().length() < 4) { // 전체 순위가 3자리 수인 경우.
-							g.drawString(Table.getValueAt(list.get(over), 1).toString(), x + x1-2+15*(monList.size()-2)+count*80, 405 - (int) Table.getValueAt(list.get(over), 1)*3/10); // 막대위에 전체 순위 표시.
+							g.drawString(Table.getValueAt(list.get(over), 1).toString(), x + x1-2+15*(monList.size()-2)+count*100, 405 - (int) Table.getValueAt(list.get(over), 1)*3/10); // 막대위에 전체 순위 표시.
 						} else { // 전체 순위가 4자리 수인 경우.
-							g.drawString(Table.getValueAt(list.get(over), 1).toString(), x + x1-7+15*(monList.size()-2)+count*80, 405 - (int) Table.getValueAt(list.get(over), 1)*3/10); // 막대위에 전체 순위 표시.
+							g.drawString(Table.getValueAt(list.get(over), 1).toString(), x + x1-7+15*(monList.size()-2)+count*100, 405 - (int) Table.getValueAt(list.get(over), 1)*3/10); // 막대위에 전체 순위 표시.
 						}
 					} else { // 최대크기를 넘는 경우.
 						g.setColor(col); // 막대색.
-						g.fillRect(x + x1+15*(monList.size()-2)+count*80, 50, 15, 360); // 전체 순위.
+						g.fillRect(x + x1+15*(monList.size()-2)+count*100, 50, 15, 360); // 전체 순위.
 						g.drawString(Table.getValueAt(list.get(over), 1).toString(), x+x1-7+15*(monList.size()-2), 45); // 막대위에 전체 순위 표시.
 						g.setColor(Color.black); // 선색.
 						g.drawLine(x + x1-4+15*(monList.size()-2), 50, x + x1+24+15*(monList.size()-2), 50); // 막대위에 선.
 					}
 					g.setColor(col); // 막대색.
-					g.fillRect(x + x1+45+30*(monList.size()-2)+count*80, 410 - (int) Table.getValueAt(list.get(over), 2)*50, 15, (int) Table.getValueAt(list.get(over), 2)*50); // 매장 내 순위.
-					g.drawString(Table.getValueAt(list.get(over), 2).toString() + "등", x + x1+46+30*(monList.size()-2)+count*80, 405 - (int) Table.getValueAt(list.get(over), 2)*50); // 막대위에 매장 내 순위 표시.
+					g.fillRect(x + x1+45+30*(monList.size()-2)+count*100, 410 - (int) Table.getValueAt(list.get(over), 2)*50, 15, (int) Table.getValueAt(list.get(over), 2)*50); // 매장 내 순위.
+					g.drawString(Table.getValueAt(list.get(over), 2).toString() + "등", x + x1+46+30*(monList.size()-2)+count*100, 405 - (int) Table.getValueAt(list.get(over), 2)*50); // 막대위에 매장 내 순위 표시.
 					// 매장명 넣기.
 					g.setColor(Color.black);
-					g.drawString(Table.getValueAt(list.get(over), 6).toString(), 740+55*(monList.size()-2)+count*90, 430);
+					g.drawString(Table.getValueAt(list.get(over), 6).toString(), 740+55*(monList.size()-2)+count*110, 430);
 					count++;
 					}
 				over++;
