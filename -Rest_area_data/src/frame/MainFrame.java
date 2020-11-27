@@ -50,6 +50,7 @@ public class MainFrame extends JFrame
    JToolBar jtb;
    JComboBox<String> combo2,combo3;
    JTable Table;
+   TableRowSorter sorter;
    JScrollPane scroll;
    DefaultTableModel model;
    Csvtodb ctd;//db객체 매개변수
@@ -164,24 +165,28 @@ public class MainFrame extends JFrame
       p1 = new JPanel();
       Object[] header2 = {"기준연월","전체판매순위","휴게소내 판매순위","휴게소 코드","휴게소명","매장코드","매장명"};
       model = new DefaultTableModel(header2,0) {
-    	  public Class getColumnClass(int column) 
+    	  public Class getColumnClass(int column)
     	  {
     	        if (column >= 0 && column <= getColumnCount())
-    	          return getValueAt(0, column).getClass();
+    	        {
+      	          return getValueAt(0, column).getClass();//테이블에 추가되는 자료들의 자료형을 알아야한다.
+    	        }
     	        else
-    	          return Object.class;//테이블에 추가되는 자료들의 자료형을 알아야한다.
-    	        }  
+    	        {
+    	        	return Object.class;
+    	        }
+    	  }  
       };
       Table = new JTable(model);
-      TableRowSorter sorter = new TableRowSorter(model);
+      sorter = new TableRowSorter(model);
       Table.setRowSorter(sorter);
       
       scroll = new JScrollPane(Table);
       scroll.setPreferredSize(new Dimension(1000,500));
       drawingPanel = new DrawingPanel();
       drawingPanel.setPreferredSize(new Dimension(1000,500));
-      
       p1.add(scroll);
+      
       frame.getContentPane().add(drawingPanel,BorderLayout.CENTER); 
       frame.getContentPane().add(p1,BorderLayout.CENTER);
      
@@ -425,7 +430,12 @@ class LookListener implements ActionListener
 			System.out.println("invalid content");
 			return;
 		}
-		model.setNumRows(0);//먼저 테이블을 초기화한다.
+		//model.setNumRows(0);//먼저 테이블을 초기화한다.
+		DefaultTableModel dm = (DefaultTableModel)Table.getModel();
+		while(dm.getRowCount() > 0)
+		{
+		       dm.removeRow(0);
+		}
 		if(searchBar.getText().equals(""))//검색창에 아무것도 입력하지 않았을때.
 		{
 			Vector<Vector<Area>> temp = lu.lookAll(combo2Id,combo3Id);//객체를 담은 벡터
